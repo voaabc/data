@@ -8,9 +8,9 @@ tags: MySQL CentOS7
 * content
 {:toc}
 
-###安装前的检查
+### 安装前的检查
 
-####检查Linux系统
+#### 检查Linux系统
 
 ```shell
 [root@mysql5507 ~]# cat /etc/system-release
@@ -25,7 +25,7 @@ Swap:          2047           0        2047
 
 ```
 
-####检查是否安装了MySQL
+#### 检查是否安装了MySQL
 
 ```shell
 [root@mysql5507 ~]# rpm -qa | grep mysql
@@ -37,7 +37,7 @@ Failed to stop mariadb.service: Unit mariadb.service not loaded.
 [root@mysql5507 ~]# rpm -qa | grep mariadb
 ```
 
-####检查是否开启防火墙
+#### 检查是否开启防火墙
 ```shell
 [root@mysql5507 ~]# firewall-cmd --state
 running
@@ -65,7 +65,7 @@ Removed symlink /etc/systemd/system/dbus-org.fedoraproject.FirewallD1.service.
 not running
 ```
 
-####检查NUMA
+#### 检查NUMA
 
 ```shell
 [root@mysql5507 ~]# rpm -qa | grep libaio
@@ -80,8 +80,9 @@ node   0
   0:  10 
 ```
 
+
+#### 检查ulimit
 ```shell 
-###检查ulimit
 [root@mysql5507 ~]# ulimit -a
 core file size          (blocks, -c) 0
 data seg size           (kbytes, -d) unlimited
@@ -101,7 +102,7 @@ virtual memory          (kbytes, -v) unlimited
 file locks                      (-x) unlimited
 ```
 
-###检查依赖包libaio
+#### 检查依赖包libaio
 ```shell
 [root@mysql5507 ~]# yum install -y libaio
 Loaded plugins: fastestmirror
@@ -113,7 +114,7 @@ Package libaio-0.3.109-13.el7.x86_64 already installed and latest version
 Nothing to do
 ```
 
-###检查selinux
+#### 检查selinux
 ```shell
 [root@mysql5507 ~]# getenforce
 Enforcing
@@ -142,9 +143,9 @@ Permissive
 
 
 
-####安装MySQL
+### 安装MySQL
 
-###创建用户和目录
+#### 创建用户和目录
 
 ```shell
 [root@mysql5507 ~]# groupadd mysql
@@ -187,7 +188,7 @@ drwxr-xr-x. 28 root root   4096 Apr  6 12:53 share
 drwxr-xr-x.  2 root root     90 Apr  6 12:53 support-files
 ```
 
-###创建配置文件my.cnf
+#### 创建配置文件my.cnf
 ```shell
 [root@mysql5507 ~]# vim /etc/my.cnf
 #
