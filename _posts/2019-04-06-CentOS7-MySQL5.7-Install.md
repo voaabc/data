@@ -279,7 +279,7 @@ Starting MySQL.. SUCCESS!
 ```
 
 
-#### 初始化
+#### 登录
 ```shell
 [root@mysql5507 data]# mysql -uroot -p
 Enter password: 
