@@ -191,162 +191,121 @@ drwxr-xr-x.  2 root root     90 Apr  6 12:53 support-files
 #### 创建配置文件my.cnf
 ```shell
 [root@mysql5507 ~]# vim /etc/my.cnf
-#
-[client]
-port	= 3306
-socket	= /data/mysql/mysql.sock
 
-[mysql]
-prompt="\u@mysqldb \R:\m:\s [\d]> "
-no-auto-rehash
+
+[client]
+port = 3306
+socket = /data/mysql/data/mysql.sock
+
+#添加客户端utf8
+default-character-set = utf8
+
 
 [mysqld]
-user	= mysql
-port	= 3306
-basedir	= /usr/local/mysql
-datadir	= /data/mysql
-socket	= /data/mysql/mysql.sock
-pid-file = mysqldb.pid
-character-set-server = utf8mb4
-skip_name_resolve = 1
+user = mysql
+port = 3306
+server-id = 229
+log-bin=mysql-bin
 
-#若你的MySQL数据库主要运行在境外，请务必根据实际情况调整本参数
-time_zone = "+8:00"
+basedir = /usr/local/mysql
+datadir = /data/mysql/data
+socket = /data/mysql/data/mysql.sock
 
-open_files_limit    = 65535
-back_log = 1024
-max_connections = 512
-max_connect_errors = 1000000
-table_open_cache = 1024
-table_definition_cache = 1024
-table_open_cache_instances = 64
-thread_stack = 512K
-external-locking = FALSE
-max_allowed_packet = 32M
-sort_buffer_size = 4M
-join_buffer_size = 4M
-thread_cache_size = 768
-interactive_timeout = 600
-wait_timeout = 600
-tmp_table_size = 32M
-max_heap_table_size = 32M
-slow_query_log = 1
-log_timestamps = SYSTEM
-slow_query_log_file = /data/mysql/slow.log
-log-error = /data/mysql/error.log
-long_query_time = 0.1
-log_queries_not_using_indexes =1
-log_throttle_queries_not_using_indexes = 60
-min_examined_row_limit = 100
-log_slow_admin_statements = 1
-log_slow_slave_statements = 1
-server-id = 3306
-log-bin = /data/mysql/mybinlog
-sync_binlog = 1
-binlog_cache_size = 4M
-max_binlog_cache_size = 2G
-max_binlog_size = 1G
-expire_logs_days = 7
-master_info_repository = TABLE
-relay_log_info_repository = TABLE
-gtid_mode = on
-enforce_gtid_consistency = 1
-log_slave_updates
-slave-rows-search-algorithms = 'INDEX_SCAN,HASH_SCAN'
-binlog_format = row
-binlog_checksum = 1
-relay_log_recovery = 1
-relay-log-purge = 1
-key_buffer_size = 32M
-read_buffer_size = 8M
-read_rnd_buffer_size = 4M
-bulk_insert_buffer_size = 64M
-myisam_sort_buffer_size = 128M
-myisam_max_sort_file_size = 10G
-myisam_repair_threads = 1
-lock_wait_timeout = 3600
-explicit_defaults_for_timestamp = 1
-innodb_thread_concurrency = 0
-innodb_sync_spin_loops = 100
-innodb_spin_wait_delay = 30
+#添加如下参数
 
-transaction_isolation = REPEATABLE-READ
-#innodb_additional_mem_pool_size = 16M
-innodb_buffer_pool_size = 1434M
-innodb_buffer_pool_instances = 4
-innodb_buffer_pool_load_at_startup = 1
-innodb_buffer_pool_dump_at_shutdown = 1
-innodb_data_file_path = ibdata1:1G:autoextend
-innodb_flush_log_at_trx_commit = 1
-innodb_log_buffer_size = 32M
-innodb_log_file_size = 2G
-innodb_log_files_in_group = 2
-innodb_max_undo_log_size = 4G
-innodb_undo_directory = /data/mysql/undolog
-innodb_undo_tablespaces = 95
+lower_case_table_names=1
+max_allowed_packet=16M
 
-# 根据您的服务器IOPS能力适当调整
-# 一般配普通SSD盘的话，可以调整到 10000 - 20000
-# 配置高端PCIe SSD卡的话，则可以调整的更高，比如 50000 - 80000
-innodb_io_capacity = 4000
-innodb_io_capacity_max = 8000
-innodb_flush_sync = 0
-innodb_flush_neighbors = 0
-innodb_write_io_threads = 8
-innodb_read_io_threads = 8
-innodb_purge_threads = 4
-innodb_page_cleaners = 4
-innodb_open_files = 65535
-innodb_max_dirty_pages_pct = 50
-innodb_flush_method = O_DIRECT
-innodb_lru_scan_depth = 4000
-innodb_checksum_algorithm = crc32
-innodb_lock_wait_timeout = 10
-innodb_rollback_on_timeout = 1
-innodb_print_all_deadlocks = 1
-innodb_file_per_table = 1
-innodb_online_alter_log_max_size = 4G
-internal_tmp_disk_storage_engine = InnoDB
-innodb_stats_on_metadata = 0
+innodb_strict_mode=1
+innodb_buffer_pool_size=300M
+innodb_stats_on_metadata=0
+innodb_file_format=Barracuda
+innodb_flush_method=O_DIRECT
+innodb_log_files_in_group=2
+innodb_log_file_size=256M
+innodb_log_buffer_size=64M
+innodb_file_per_table=1
+innodb_max_dirty_pages_pct=60
 
-# some var for MySQL 5.7
-innodb_checksums = 1
-#innodb_file_format = Barracuda
-#innodb_file_format_max = Barracuda
-query_cache_size = 0
-query_cache_type = 0
-innodb_undo_logs = 128
+key_buffer_size= 32M
+tmp_table_size=32M
+max_heap_table_size=32M
+table_open_cache=1024
+query_cache_type=0
+query_cache_size=0
+max_connections=1000
+thread_cache_size=1024
+open_files_limit=65535
 
-innodb_status_file = 1
-# 注意: 开启 innodb_status_output & innodb_status_output_locks 后, 可能会导致log-error文件增长较快
-innodb_status_output = 0
-innodb_status_output_locks = 0
-
-#performance_schema
-performance_schema = 1
-performance_schema_instrument = '%memory%=on'
-performance_schema_instrument = '%lock%=on'
-
-#innodb monitor
-innodb_monitor_enable="module_innodb"
-innodb_monitor_enable="module_server"
-innodb_monitor_enable="module_dml"
-innodb_monitor_enable="module_ddl"
-innodb_monitor_enable="module_trx"
-innodb_monitor_enable="module_os"
-innodb_monitor_enable="module_purge"
-innodb_monitor_enable="module_log"
-innodb_monitor_enable="module_lock"
-innodb_monitor_enable="module_buffer"
-innodb_monitor_enable="module_index"
-innodb_monitor_enable="module_ibuf_system"
-innodb_monitor_enable="module_buffer_page"
-innodb_monitor_enable="module_adaptive_hash"
-
-[mysqldump]
-quick
-max_allowed_packet = 32M
+default_storage_engine=InnoDB
+character_set_server=utf8
+collation_server=utf8_general_ci
 
 
 ```
+
+#### 创建mysql的数据，日志，文件路径
+
+```shell
+[root@mysql5507 ~]# mkdir /data/mysql/mysql3306/{data,logs,tmp} -p
+[root@mysql5507 ~]# chown -R mysql.mysql /data/mysql
+[root@mysql5507 ~]# chmod -R 755 /data/mysql/
+[root@mysql5507 mysql]# mysql
+-bash: mysql: command not found
+[root@mysql5507 mysql]# echo "export PATH=$PATH:/usr/local/mysql/bin" >>/etc/profile
+[root@mysql5507 mysql]# more /etc/profile  | grep mysql
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/usr/local/mysql/bin
+[root@mysql5507 mysql]# source /etc/profile
+```
+
+#### 初始化
+```shell
+[root@mysql5507 data]# /usr/local/mysql/bin/mysqld --defaults-file=/etc/my.cnf --initialize
+2019-04-06T10:07:05.267433Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2019-04-06T10:07:05.281852Z 0 [Warning] InnoDB: Using innodb_file_format is deprecated and the parameter may be removed in future releases. See http://dev.mysql.com/doc/refman/5.7/en/innodb-file-format.html
+ 100 200
+ 100 200
+2019-04-06T10:07:05.824590Z 0 [Warning] InnoDB: New log files created, LSN=45790
+2019-04-06T10:07:05.852577Z 0 [Warning] InnoDB: Creating foreign key constraint system tables.
+2019-04-06T10:07:05.918667Z 0 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: bb4955f2-5853-11e9-9c58-000c29e108c0.
+2019-04-06T10:07:05.920915Z 0 [Warning] Gtid table is not ready to be used. Table 'mysql.gtid_executed' cannot be opened.
+2019-04-06T10:07:05.924518Z 1 [Note] A temporary password is generated for root@localhost: a:wKwwy7bCMJ
+
+[root@mysql5507 mysql]# cp support-files/mysql.server /etc/init.d/mysql
+[root@mysql5507 mysql]# /etc/init.d/mysql start
+Starting MySQL.. SUCCESS! 
+
+
+```
+
+
+#### 初始化
+```shell
+[root@mysql5507 data]# mysql -uroot -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 5
+Server version: 5.7.18-log
+
+Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> ALTER USER USER() IDENTIFIED BY '123123';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> grant all privileges on *.* to 'owen'@'%' identified by '123123' WITH GRANT OPTION;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.00 sec)
+
+```
+
+
+
 
