@@ -13,19 +13,19 @@ tags: Docker
 yum -y update
 
  
-####安装Docker虚拟机
+### 安装Docker虚拟机
 
 yum install -y docker
 
  
-####运行、重启、关闭Docker虚拟机
+### 运行、重启、关闭Docker虚拟机
 
 service docker start
 service docker start
 service docker stop
 
  
-####搜索镜像
+### 搜索镜像
 
 docker search 镜像名称
 
@@ -59,7 +59,7 @@ docker.io   docker.io/s390x/tomcat                  Apache Tomcat is an open sou
 docker.io   docker.io/secoresearch/tomcat-varnish   Tomcat and Varnish 5.0                          0                    [OK]
 ```
  
-####下载镜像
+### 下载镜像
 
 docker pull 镜像名称
 
@@ -83,7 +83,7 @@ Digest: sha256:bbdb0de8298ab7281ff28331a9e4129562820ac54e243e44c3749f389876f562
 Status: Downloaded newer image for docker.io/tomcat:8.5.32
 ```
 
-####查看镜像
+### 查看镜像
 
 docker images
 
@@ -93,12 +93,12 @@ REPOSITORY          TAG                 IMAGE ID            CREATED             
 docker.io/tomcat    8.5.32              5808f01b11bf        9 months ago        463 MB
 ```
 
-####删除镜像
+### 删除镜像
 
 docker rmi 镜像名称
 
  
-####运行容器
+### 运行容器
 
 docker run 启动参数  镜像名称
 
@@ -127,7 +127,7 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 687eddfaf1db        tomcat:8.5.32       "catalina.sh run"   29 seconds ago      Up 28 seconds       8080/tcp            myTomcat
 ```
  
-####查看容器列表
+### 查看容器列表
 
 docker ps -a
 
@@ -145,12 +145,12 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 
 
  
-####查看容器信息
+### 查看容器信息
 
 docker inspect 容器ID
 
 
-####停止、挂起、恢复容器
+### 停止、挂起、恢复容器
 
 docker stop 容器ID
 docker pause 容器ID
@@ -158,7 +158,7 @@ docker unpase 容器ID
 
 
  
-####删除容器
+### 删除容器
 
 docker rm 容器ID
 
@@ -178,7 +178,7 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 ```
 
-####端口映射
+### 端口映射
     *使用命令：docker run --name container-name:tag -d -p 服务器端口:Docker 端口 image-name
 
         1.--name：自定义容器名，不指定时，docker 会自动生成一个名称
