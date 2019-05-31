@@ -1,0 +1,222 @@
+---
+layout: post
+title: Docker容器常用命令
+categories: Docker
+tags: Docker  
+---
+
+* content
+{:toc}
+
+先更新软件包
+
+yum -y update
+
+ 
+####安装Docker虚拟机
+
+yum install -y docker
+
+ 
+####运行、重启、关闭Docker虚拟机
+
+service docker start
+service docker start
+service docker stop
+
+ 
+####搜索镜像
+
+docker search 镜像名称
+
+```shell
+[root@docker01 ~]# docker search tomcat
+INDEX       NAME                                    DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
+docker.io   docker.io/tomcat                        Apache Tomcat is an open source implementa...   2407      [OK]       
+docker.io   docker.io/tomee                         Apache TomEE is an all-Apache Java EE cert...   66        [OK]       
+docker.io   docker.io/dordoka/tomcat                Ubuntu 14.04, Oracle JDK 8 and Tomcat 8 ba...   53                   [OK]
+docker.io   docker.io/bitnami/tomcat                Bitnami Tomcat Docker Image                     28                   [OK]
+docker.io   docker.io/kubeguide/tomcat-app          Tomcat image for Chapter 1                      23                   
+docker.io   docker.io/consol/tomcat-7.0             Tomcat 7.0.57, 8080, "admin/admin"              16                   [OK]
+docker.io   docker.io/cloudesire/tomcat             Tomcat server, 6/7/8                            14                   [OK]
+docker.io   docker.io/aallam/tomcat-mysql           Debian, Oracle JDK, Tomcat & MySQL              11                   [OK]
+docker.io   docker.io/tutum/tomcat                  Base docker image to run a Tomcat applicat...   11                   
+docker.io   docker.io/jeanblanchard/tomcat          Minimal Docker image with Apache Tomcat         8                    
+docker.io   docker.io/arm32v7/tomcat                Apache Tomcat is an open source implementa...   6                    
+docker.io   docker.io/rightctrl/tomcat              CentOS , Oracle Java, tomcat application s...   4                    [OK]
+docker.io   docker.io/maluuba/tomcat7-java8         Tomcat7 with java8.                             3                    
+docker.io   docker.io/amd64/tomcat                  Apache Tomcat is an open source implementa...   2                    
+docker.io   docker.io/arm64v8/tomcat                Apache Tomcat is an open source implementa...   2                    
+docker.io   docker.io/99taxis/tomcat7               Tomcat7                                         1                    [OK]
+docker.io   docker.io/camptocamp/tomcat-logback     Docker image for tomcat with logback integ...   1                    [OK]
+docker.io   docker.io/i386/tomcat                   Apache Tomcat is an open source implementa...   1                    
+docker.io   docker.io/ppc64le/tomcat                Apache Tomcat is an open source implementa...   1                    
+docker.io   docker.io/cfje/tomcat-resource          Tomcat Concourse Resource                       0                    
+docker.io   docker.io/jelastic/tomcat               An image of the Tomcat Java application se...   0                    
+docker.io   docker.io/oobsri/tomcat8                Testing CI Jobs with different names.           0                    
+docker.io   docker.io/picoded/tomcat7               tomcat7 with jre8 and MANAGER_USER / MANAG...   0                    [OK]
+docker.io   docker.io/s390x/tomcat                  Apache Tomcat is an open source implementa...   0                    
+docker.io   docker.io/secoresearch/tomcat-varnish   Tomcat and Varnish 5.0                          0                    [OK]
+```
+ 
+####下载镜像
+
+docker pull 镜像名称
+
+```shell
+[root@docker01 ~]# docker pull tomcat:8.5.32
+Trying to pull repository docker.io/library/tomcat ... 
+8.5.32: Pulling from docker.io/library/tomcat
+55cbf04beb70: Pull complete 
+1607093a898c: Pull complete 
+9a8ea045c926: Pull complete 
+1290813abd9d: Pull complete 
+8a6b982ad6d7: Pull complete 
+abb029e68402: Pull complete 
+d068d0a738e5: Pull complete 
+42ee47bb0c52: Pull complete 
+ae9c861aed25: Pull complete 
+60bba9d0dc8d: Pull complete 
+15222e409530: Pull complete 
+2dcc81b69024: Pull complete 
+Digest: sha256:bbdb0de8298ab7281ff28331a9e4129562820ac54e243e44c3749f389876f562
+Status: Downloaded newer image for docker.io/tomcat:8.5.32
+```
+
+####查看镜像
+
+docker images
+
+```shell
+[root@docker01 ~]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+docker.io/tomcat    8.5.32              5808f01b11bf        9 months ago        463 MB
+```
+
+####删除镜像
+
+docker rmi 镜像名称
+
+ 
+####运行容器
+
+docker run 启动参数  镜像名称
+
+    *使用命令：docker run --name container-name:tag -d image-name
+
+    1.--name：自定义容器名，不指定时，docker 会自动生成一个名称
+    2.-d：表示后台运行容器
+    3.image-name：指定运行的镜像名称以及 Tag 
+
+    *如下所示启动 docker.io/tomcat 镜像成功，前缀 docker.io 可以不写，后面的 tag 版本号要指定。可以使用 docker ps 命令查看容器
+
+```shell
+[root@docker01 ~]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+docker.io/tomcat    8.5.32              5808f01b11bf        9 months ago        463 MB
+[root@docker01 ~]# docker run --name myTomcat -d tomcat:8.5.32
+687eddfaf1db351635e168d808a4497f39f94f8d17cbf349c2a4ff9587d6c41c
+[root@docker01 ~]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+docker.io/tomcat    8.5.32              5808f01b11bf        9 months ago        463 MB
+[root@docker01 ~]# docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+687eddfaf1db        tomcat:8.5.32       "catalina.sh run"   26 seconds ago      Up 24 seconds       8080/tcp            myTomcat
+[root@docker01 ~]# docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+687eddfaf1db        tomcat:8.5.32       "catalina.sh run"   29 seconds ago      Up 28 seconds       8080/tcp            myTomcat
+```
+ 
+####查看容器列表
+
+docker ps -a
+
+```shell
+[root@docker01 ~]# docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+687eddfaf1db        tomcat:8.5.32       "catalina.sh run"   26 seconds ago      Up 24 seconds       8080/tcp            myTomcat
+[root@docker01 ~]# docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+687eddfaf1db        tomcat:8.5.32       "catalina.sh run"   29 seconds ago      Up 28 seconds       8080/tcp            myTomcat
+```
+
+
+ 
+
+
+ 
+####查看容器信息
+
+docker inspect 容器ID
+
+
+####停止、挂起、恢复容器
+
+docker stop 容器ID
+docker pause 容器ID
+docker unpase 容器ID
+
+
+ 
+####删除容器
+
+docker rm 容器ID
+
+    *使用 docker rm container-id 命令 删除容器，删除容器前，必须先停止容器运行，根据 容器 id 进行删除
+    *rm 参数是删除容器，rmi 参数是删除镜像
+    *镜像运行在容器中，docker 中可以运行多个互补干扰的容器，可以将同一个镜像在多个容器中进行运行
+
+```shell
+[root@docker01 ~]# docker stop myTomcat
+myTomcat
+[root@docker01 ~]# docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                       PORTS               NAMES
+687eddfaf1db        tomcat:8.5.32       "catalina.sh run"   44 minutes ago      Exited (143) 9 seconds ago                       myTomcat
+[root@docker01 ~]# docker rm 687eddfaf1db
+687eddfaf1db
+[root@docker01 ~]# docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+```
+
+####端口映射
+    *使用命令：docker run --name container-name:tag -d -p 服务器端口:Docker 端口 image-name
+
+        1.--name：自定义容器名，不指定时，docker 会自动生成一个名称
+        2.-d：表示后台运行容器
+        3.image-name：指定运行的镜像名称以及 Tag 
+        4.-p 表示进行服务器与 Docker 容器的端口映射，默认情况下容器中镜像占用的端口是 Docker 容器中的端口与外界是隔绝的，必须进行端口映射才能访问
+
+    *如下所示：服务器防火墙先开放了 8080、8090 端口，否则防火墙不开放端口的话，从其它电脑也是无法访问服务器的
+    *然后 运行了 两个容器，容器名称分别指定为 "myTomcat1"、"myTomcat2"、两个容器中都是同一个 docker.io/tomcat:8.5.32 镜像
+    *两个容器都指定了端口映射，分别是8080、8090 ，都会转发到 Docker 容器内部
+
+
+
+ 
+数据卷管理
+
+docker volume create 数据卷名称  #创建数据卷
+docker volume rm 数据卷名称  #删除数据卷
+docker volume inspect 数据卷名称  #查看数据卷
+
+ 
+网络管理
+
+docker network ls 查看网络信息
+docker network create --subnet=网段 网络名称
+docker network rm 网络名称
+
+ 
+避免VM虚拟机挂起恢复之后，Docker虚拟机断网
+
+    vi /etc/sysctl.conf
+
+ 
+
+文件中添加net.ipv4.ip_forward=1这个配置
+
+#重启网络服务
+systemctl  restart network
+
+
+
