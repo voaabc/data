@@ -10,7 +10,7 @@ tags: Docker
 
 ### 先更新软件包
 
-yum -y update
+   yum -y update
 
  
 ### 安装Docker虚拟机
@@ -21,7 +21,9 @@ yum install -y docker
 ### 运行、重启、关闭Docker虚拟机
 
 service docker start
+
 service docker start
+
 service docker stop
 
  
@@ -31,32 +33,9 @@ docker search 镜像名称
 
 ```shell
 [root@docker01 ~]# docker search tomcat
-INDEX       NAME                                    DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
-docker.io   docker.io/tomcat                        Apache Tomcat is an open source implementa...   2407      [OK]       
-docker.io   docker.io/tomee                         Apache TomEE is an all-Apache Java EE cert...   66        [OK]       
-docker.io   docker.io/dordoka/tomcat                Ubuntu 14.04, Oracle JDK 8 and Tomcat 8 ba...   53                   [OK]
-docker.io   docker.io/bitnami/tomcat                Bitnami Tomcat Docker Image                     28                   [OK]
-docker.io   docker.io/kubeguide/tomcat-app          Tomcat image for Chapter 1                      23                   
-docker.io   docker.io/consol/tomcat-7.0             Tomcat 7.0.57, 8080, "admin/admin"              16                   [OK]
-docker.io   docker.io/cloudesire/tomcat             Tomcat server, 6/7/8                            14                   [OK]
-docker.io   docker.io/aallam/tomcat-mysql           Debian, Oracle JDK, Tomcat & MySQL              11                   [OK]
-docker.io   docker.io/tutum/tomcat                  Base docker image to run a Tomcat applicat...   11                   
-docker.io   docker.io/jeanblanchard/tomcat          Minimal Docker image with Apache Tomcat         8                    
-docker.io   docker.io/arm32v7/tomcat                Apache Tomcat is an open source implementa...   6                    
-docker.io   docker.io/rightctrl/tomcat              CentOS , Oracle Java, tomcat application s...   4                    [OK]
-docker.io   docker.io/maluuba/tomcat7-java8         Tomcat7 with java8.                             3                    
-docker.io   docker.io/amd64/tomcat                  Apache Tomcat is an open source implementa...   2                    
-docker.io   docker.io/arm64v8/tomcat                Apache Tomcat is an open source implementa...   2                    
-docker.io   docker.io/99taxis/tomcat7               Tomcat7                                         1                    [OK]
-docker.io   docker.io/camptocamp/tomcat-logback     Docker image for tomcat with logback integ...   1                    [OK]
-docker.io   docker.io/i386/tomcat                   Apache Tomcat is an open source implementa...   1                    
-docker.io   docker.io/ppc64le/tomcat                Apache Tomcat is an open source implementa...   1                    
-docker.io   docker.io/cfje/tomcat-resource          Tomcat Concourse Resource                       0                    
-docker.io   docker.io/jelastic/tomcat               An image of the Tomcat Java application se...   0                    
-docker.io   docker.io/oobsri/tomcat8                Testing CI Jobs with different names.           0                    
-docker.io   docker.io/picoded/tomcat7               tomcat7 with jre8 and MANAGER_USER / MANAG...   0                    [OK]
-docker.io   docker.io/s390x/tomcat                  Apache Tomcat is an open source implementa...   0                    
-docker.io   docker.io/secoresearch/tomcat-varnish   Tomcat and Varnish 5.0                          0                    [OK]
+INDEX       NAME                                    DESCRIPTION                                     STARS     OFFICIAL
+docker.io   docker.io/tomcat                        Apache Tomcat is an open source implementa...   2407      [OK]
+
 ```
  
 ### 下载镜像
