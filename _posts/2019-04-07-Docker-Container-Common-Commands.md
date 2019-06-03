@@ -189,33 +189,80 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
     *如下所示：服务器防火墙先开放了 8080、8090 端口，否则防火墙不开放端口的话，从其它电脑也是无法访问服务器的
     *然后 运行了 两个容器，容器名称分别指定为 "myTomcat1"、"myTomcat2"、两个容器中都是同一个 docker.io/tomcat:8.5.32 镜像
     *两个容器都指定了端口映射，分别是8080、8090 ，都会转发到 Docker 容器内部
+	*启动成功之后，ip addr show 查一下服务器 ip 地址，然后就能从物理机上访问了
+```shell
+[root@docker01 ~]# docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+[root@docker01 ~]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+docker.io/tomcat    8.5.32              5808f01b11bf        9 months ago        463 MB
+[root@docker01 ~]# docker run --name myTtomcat1 -d -p 8080:8080 tomcat:8.5.32
+fdf6c3af75bf121035b1aa67926e2d6dd287c6f755583128db8460d2d953d908
+[root@docker01 ~]# docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                    NAMES
+fdf6c3af75bf        tomcat:8.5.32       "catalina.sh run"   14 seconds ago      Up 13 seconds       0.0.0.0:8080->8080/tcp   myTtomcat1
+[root@docker01 ~]# docker run --name myTtomcat2 -d -p 8090:8080 tomcat:8.5.32
+6149e23a6822a6215c81e217d77446112ef19d78c367ec0844b39e89f523274c
+[root@docker01 ~]# docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                    NAMES
+6149e23a6822        tomcat:8.5.32       "catalina.sh run"   5 seconds ago       Up 5 seconds        0.0.0.0:8090->8080/tcp   myTtomcat2
+fdf6c3af75bf        tomcat:8.5.32       "catalina.sh run"   30 seconds ago      Up 29 seconds       0.0.0.0:8080->8080/tcp   myTtomcat1
+[root@docker01 ~]# ip addr show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 00:0c:29:84:45:75 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.8.211/24 brd 192.168.8.255 scope global noprefixroute ens33
+       valid_lft forever preferred_lft forever
+    inet6 fe80::c71:19f9:8df7:f491/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:08:94:f1:03 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 scope global docker0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:8ff:fe94:f103/64 scope link 
+       valid_lft forever preferred_lft forever
+9: veth8b3ccda@if8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
+    link/ether f6:03:66:25:66:bf brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::f403:66ff:fe25:66bf/64 scope link 
+       valid_lft forever preferred_lft forever
+11: vethcebb16c@if10: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
+    link/ether e6:2c:c9:82:16:dd brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::e42c:c9ff:fe82:16dd/64 scope link 
+       valid_lft forever preferred_lft forever
 
+```
 
+### 容器日志
+
+    *使用 docker logs container-name/container-id 命令 可以查看容器日志信息，指定容器名或者 容器 id 即可
 
  
-数据卷管理
+### 数据卷管理
 
 docker volume create 数据卷名称  #创建数据卷
 docker volume rm 数据卷名称  #删除数据卷
 docker volume inspect 数据卷名称  #查看数据卷
 
  
-网络管理
+### 网络管理
 
 docker network ls 查看网络信息
 docker network create --subnet=网段 网络名称
 docker network rm 网络名称
 
  
-避免VM虚拟机挂起恢复之后，Docker虚拟机断网
+### 避免VM虚拟机挂起恢复之后，Docker虚拟机断网
 
-    vi /etc/sysctl.conf
+    vim /etc/sysctl.conf
 
- 
 
 文件中添加net.ipv4.ip_forward=1这个配置
-
-#重启网络服务
+重启网络服务
 systemctl  restart network
 
 
