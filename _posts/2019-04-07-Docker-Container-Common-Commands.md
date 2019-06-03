@@ -104,9 +104,9 @@ docker run 启动参数  镜像名称
 
 * 使用命令：docker run --name container-name:tag -d image-name
 
-1.--name：自定义容器名，不指定时，docker 会自动生成一个名称
-2.-d：表示后台运行容器
-3.image-name：指定运行的镜像名称以及 Tag 
+1. --name：自定义容器名，不指定时，docker 会自动生成一个名称
+2. -d：表示后台运行容器
+3. image-name：指定运行的镜像名称以及 Tag 
 
 * 如下所示启动 docker.io/tomcat 镜像成功，前缀 docker.io 可以不写，后面的 tag 版本号要指定。可以使用 docker ps 命令查看容器
 
@@ -181,15 +181,16 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 ### 端口映射
 * 使用命令：docker run --name container-name:tag -d -p 服务器端口:Docker 端口 image-name
 
-    1.--name：自定义容器名，不指定时，docker 会自动生成一个名称
-    2.-d：表示后台运行容器
-    3.image-name：指定运行的镜像名称以及 Tag 
-        4.-p 表示进行服务器与 Docker 容器的端口映射，默认情况下容器中镜像占用的端口是 Docker 容器中的端口与外界是隔绝的，必须进行端口映射才能访问
+1. --name：自定义容器名，不指定时，docker 会自动生成一个名称
+2. -d：表示后台运行容器
+3. image-name：指定运行的镜像名称以及 Tag 
+4. -p 表示进行服务器与 Docker 容器的端口映射，默认情况下容器中镜像占用的端口是 Docker 容器中的端口与外界是隔绝的，必须进行端口映射才能访问
 
 * 如下所示：服务器防火墙先开放了 8080、8090 端口，否则防火墙不开放端口的话，从其它电脑也是无法访问服务器的
 * 然后 运行了 两个容器，容器名称分别指定为 "myTomcat1"、"myTomcat2"、两个容器中都是同一个 docker.io/tomcat:8.5.32 镜像
 * 两个容器都指定了端口映射，分别是8080、8090 ，都会转发到 Docker 容器内部
-	*启动成功之后，ip addr show 查一下服务器 ip 地址，然后就能从物理机上访问了
+*启动成功之后，ip addr show 查一下服务器 ip 地址，然后就能从物理机上访问了
+
 ```shell
 [root@docker01 ~]# docker ps -a
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
@@ -263,7 +264,7 @@ docker network rm 网络名称
 
 文件中添加net.ipv4.ip_forward=1这个配置
 重启网络服务
-systemctl  restart network
+   systemctl  restart network
 
 
 
