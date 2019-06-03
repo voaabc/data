@@ -131,9 +131,9 @@ docker inspect 容器ID
 
 ### 停止、挂起、恢复容器
 
-docker stop 容器ID
-docker pause 容器ID
-docker unpase 容器ID
+> docker stop 容器ID
+> docker pause 容器ID
+> docker unpause 容器ID
 
 
  

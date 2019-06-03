@@ -123,10 +123,211 @@ $ docker run -d -p 3311:3306 -e MYSQL_ROOT_PASSWORD=abc123456 -e CLUSTER_NAME=PX
 
 ![Haproxy-PXC](http://www.datadatadata.cn/images/mysql/mysql01.png)
 
+### 负载均衡中间件对比
+
+![Haproxy-PXC](http://www.datadatadata.cn/images/mysql/mysql03.png)
+
+### Haproxy安装
+
+#### 从Docker仓库拉取haproxy镜像
+
+```shell
+[root@docker01 ~]# docker pull haproxy
+Using default tag: latest
+Trying to pull repository docker.io/library/haproxy ... 
+latest: Pulling from docker.io/library/haproxy
+743f2d6c1f65: Pull complete 
+8189ac8398db: Pull complete 
+8c16b00b1545: Pull complete 
+Digest: sha256:4538ea1c4309821daa8143579e697f3a6c06dad9dc09fc750d67698469ea37a0
+Status: Downloaded newer image for docker.io/haproxy:latest
+[root@docker01 ~]# docker images
+REPOSITORY                                 TAG                 IMAGE ID            CREATED             SIZE
+docker.io/haproxy                          latest              0b132e159de1        9 days ago          72.2 MB
+docker.io/percona/percona-xtradb-cluster   latest              70b3670450ef        3 months ago        408 MB
+pxc                                        latest              70b3670450ef        3 months ago        408 MB
+docker.io/tomcat                           8.5.32              5808f01b11bf        9 months ago        463 MB
+
+```
+
+
+
+#### 创建Haproxy配置文件。供Haproxy容器使用
+
+```shell
+[root@docker01 ~]# mkdir /home/soft/haproxy/ -p
+[root@docker01 ~]# mkdir /usr/local/etc/haproxy -p
+[root@docker01 ~]# vim /home/soft/haproxy/haproxy.cfg
+#haproxy.conf写入下列内容，具体配置需要修改
+global
+    #工作目录
+    chroot /usr/local/etc/haproxy
+    #日志文件，使用rsyslog服务中local5日志设备（/var/log/local5），等级info
+    log 127.0.0.1 local5 info
+    #守护进程运行
+    daemon
+
+defaults
+    log global
+    mode    http
+    #日志格式
+    option  httplog
+    #日志中不记录负载均衡的心跳检测记录
+    option  dontlognull
+    #连接超时（毫秒）
+    timeout connect 5000
+    #客户端超时（毫秒）
+    timeout client  50000
+    #服务器超时（毫秒）
+    timeout server  50000
+
+#监控界面
+listen  admin_stats
+    #监控界面的访问的IP和端口
+    bind  0.0.0.0:8888
+    #访问协议
+    mode        http
+    #URI相对地址
+    stats uri   /dbs
+    #统计报告格式
+    stats realm     Global\ statistics
+    #登陆帐户信息
+    stats auth  admin:admin123456
+#数据库负载均衡
+listen  proxy-mysql
+    #访问的IP和端口
+    bind  0.0.0.0:3306
+    #网络协议
+    mode  tcp
+    #负载均衡算法（轮询算法）
+    #轮询算法：roundrobin
+    #权重算法：static-rr
+    #最少连接算法：leastconn
+    #请求源IP算法：source
+    balance  roundrobin
+    #日志格式
+    option  tcplog
+    #在MySQL中创建一个没有权限的haproxy用户，密码为空。Haproxy使用这个账户对MySQL数据库心跳检测
+    option  mysql-check user haproxy
+    server  MySQL_1 172.18.0.2:3306 check weight 1 maxconn 2000
+    server  MySQL_2 172.18.0.3:3306 check weight 1 maxconn 2000
+    server  MySQL_3 172.18.0.4:3306 check weight 1 maxconn 2000
+    server  MySQL_4 172.18.0.5:3306 check weight 1 maxconn 2000
+    server  MySQL_5 172.18.0.6:3306 check weight 1 maxconn 2000
+    #使用keepalive检测死链
+    option  tcpka
+```
+
+#### 创建mysql的haproxy用户
+
+> 进入pxc某个节点，在mysql中创建haproxy用户。haproxy中间件需要使用该账号登陆数据库，发送心跳检测。
+
+```shell
+[root@docker01 ~]# docker exec -it node2 mysql -uroot -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 11
+Server version: 5.7.25-28-57 Percona XtraDB Cluster (GPL), Release rel28, Revision a2ef85f, WSREP version 31.35, wsrep_31.35
+
+Copyright (c) 2009-2019 Percona LLC and/or its affiliates
+Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use mysql
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> create user 'haproxy'@'%' identified by '';
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.01 sec)
+
+```
+
+#### 创建Haproxy容器
+```shell
+[root@docker01 ~]# docker run -it -d -p 4001:8888 -p 4002:3306 -v /home/soft/haproxy:/usr/local/etc/haproxy --name h1 --net=net1 --ip 172.18.0.7 --privileged haproxy
+// -p 端口号 8888 ：haproxy后台监控界面端口，与haproxy.cnf中的配置一致
+// -p 端口号 3306 ：haproxy对外提供负载均衡服务端口，可以直接通过该端口连接到pxc集群
+// -v 目录映射，把宿主机的配置文件所在目录映射到容器的工作目录中
+// --name 容器名，建议带数字编号1，高可用时haproxy需要配置成双节点
+// --net 网段需要和pxc集群在同一网段中
+// --ip 可以指定IP，当不指定时docker虚拟机会默认分配一个
+```
+
+
+#### 进入容器执行命令启动Haproxy	
+
+> [root@docker01 haproxy]# docker exec -it h1 bash
+
+
+
+#### 在容器bash中启动Haproxy
+
+> root@e3a9de34f26d:/# haproxy -f /usr/local/etc/haproxy/haproxy.cfg
+
+#### 验证haproxy
+
+* 通过浏览器访问haproxy监控页面，远程访问需要开放端口
+
+* 访问地址：http://宿主机IP:4001/dbs
+
+* 访问路径配置文件中：stats uri /dbs
+
+* 用户名、密码在配置文件中：stats auth admin:admin123456
+* Haproxy不存储数据，只转发数据。可以在数据库中建立Haproxy的连接，端口4002，用户名和密码为数据库集群的用户名和密码
+
+![Haproxy-PXC](http://www.datadatadata.cn/images/mysql/mysql04.png)
+
+### Haproxy冗余设计
+
+> 单节点的Haproxy不具备高可用性，必须进行冗余设计，采用双节点或多节点。
+
+### 虚拟IP地址
+
+> linux系统可以在一个网卡中定义多个IP地址，把这些地址分配给多个应用程序，这些地址就是虚拟IP，Haproxy的双机热备方案最关键的技术就是虚拟IP。
+
+![Haproxy-PXC](http://www.datadatadata.cn/images/mysql/mysql05.png)
+
+* 定义虚拟IP
+* 在Docker中启动两个Haproxy容器，每个容器中还需要安装Keepalived程序（以下简称KA）
+* 两个KA会争抢虚拟IP，一个抢到后，另一个没抢到就会等待，抢到的作为主服务器，没抢到的作为备用服务器
+* 两个KA之间会进行心跳检测，如果备用服务器没有受到主服务器的心跳响应，说明主服务器发生故障，那么备用服务器就可以争抢虚拟IP，继续工作
+* 我们向虚拟IP发送数据库请求，一个Haproxy挂掉，可以有另一个接替工作
+
+Haproxy双机热备方案
+
+![Haproxy-PXC](http://www.datadatadata.cn/images/mysql/mysql02.png)
+
+* Docker中创建两个Haproxy，并通过Keepalived抢占Docker内地虚拟IP
+* Docker内的虚拟IP不能被外网，所以需要借助宿主机Keepalived映射成外网可以访问地虚拟IP
 
 
 
 
+```shell
 
+
+```
+
+
+
+```shell
+
+
+```
+
+
+```shell
+
+
+```
 
 
