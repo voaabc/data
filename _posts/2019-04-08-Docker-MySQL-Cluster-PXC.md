@@ -114,6 +114,16 @@ $ docker run -d -p 3311:3306 -e MYSQL_ROOT_PASSWORD=abc123456 -e CLUSTER_NAME=PX
 
 
 
+### 数据库集群负载均衡
+
+将请求均匀地发送给集群中的每一个节点。
+
+* 所有请求发送给单一节点，其负载过高，性能很低，而其他节点却很空闲。
+* 用Haproxy做负载均衡，可以将请求均匀地发送给每个节点，单节点负载低，性能好
+
+![Haproxy-PXC](http://www.datadatadata.cn/images/mysql/mysql01.png)
+
+
 
 
 
