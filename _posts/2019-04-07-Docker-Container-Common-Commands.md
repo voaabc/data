@@ -102,13 +102,13 @@ docker rmi 镜像名称
 
 docker run 启动参数  镜像名称
 
-    *使用命令：docker run --name container-name:tag -d image-name
+* 使用命令：docker run --name container-name:tag -d image-name
 
-    1.--name：自定义容器名，不指定时，docker 会自动生成一个名称
-    2.-d：表示后台运行容器
-    3.image-name：指定运行的镜像名称以及 Tag 
+1.--name：自定义容器名，不指定时，docker 会自动生成一个名称
+2.-d：表示后台运行容器
+3.image-name：指定运行的镜像名称以及 Tag 
 
-    *如下所示启动 docker.io/tomcat 镜像成功，前缀 docker.io 可以不写，后面的 tag 版本号要指定。可以使用 docker ps 命令查看容器
+* 如下所示启动 docker.io/tomcat 镜像成功，前缀 docker.io 可以不写，后面的 tag 版本号要指定。可以使用 docker ps 命令查看容器
 
 ```shell
 [root@docker01 ~]# docker images
@@ -162,9 +162,9 @@ docker unpase 容器ID
 
 docker rm 容器ID
 
-    *使用 docker rm container-id 命令 删除容器，删除容器前，必须先停止容器运行，根据 容器 id 进行删除
-    *rm 参数是删除容器，rmi 参数是删除镜像
-    *镜像运行在容器中，docker 中可以运行多个互补干扰的容器，可以将同一个镜像在多个容器中进行运行
+* 使用 docker rm container-id 命令 删除容器，删除容器前，必须先停止容器运行，根据 容器 id 进行删除
+* rm 参数是删除容器，rmi 参数是删除镜像
+* 镜像运行在容器中，docker 中可以运行多个互补干扰的容器，可以将同一个镜像在多个容器中进行运行
 
 ```shell
 [root@docker01 ~]# docker stop myTomcat
@@ -179,16 +179,16 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 ```
 
 ### 端口映射
-    *使用命令：docker run --name container-name:tag -d -p 服务器端口:Docker 端口 image-name
+* 使用命令：docker run --name container-name:tag -d -p 服务器端口:Docker 端口 image-name
 
-        1.--name：自定义容器名，不指定时，docker 会自动生成一个名称
-        2.-d：表示后台运行容器
-        3.image-name：指定运行的镜像名称以及 Tag 
+    1.--name：自定义容器名，不指定时，docker 会自动生成一个名称
+    2.-d：表示后台运行容器
+    3.image-name：指定运行的镜像名称以及 Tag 
         4.-p 表示进行服务器与 Docker 容器的端口映射，默认情况下容器中镜像占用的端口是 Docker 容器中的端口与外界是隔绝的，必须进行端口映射才能访问
 
-    *如下所示：服务器防火墙先开放了 8080、8090 端口，否则防火墙不开放端口的话，从其它电脑也是无法访问服务器的
-    *然后 运行了 两个容器，容器名称分别指定为 "myTomcat1"、"myTomcat2"、两个容器中都是同一个 docker.io/tomcat:8.5.32 镜像
-    *两个容器都指定了端口映射，分别是8080、8090 ，都会转发到 Docker 容器内部
+* 如下所示：服务器防火墙先开放了 8080、8090 端口，否则防火墙不开放端口的话，从其它电脑也是无法访问服务器的
+* 然后 运行了 两个容器，容器名称分别指定为 "myTomcat1"、"myTomcat2"、两个容器中都是同一个 docker.io/tomcat:8.5.32 镜像
+* 两个容器都指定了端口映射，分别是8080、8090 ，都会转发到 Docker 容器内部
 	*启动成功之后，ip addr show 查一下服务器 ip 地址，然后就能从物理机上访问了
 ```shell
 [root@docker01 ~]# docker ps -a
@@ -239,7 +239,7 @@ fdf6c3af75bf        tomcat:8.5.32       "catalina.sh run"   30 seconds ago      
 
 ### 容器日志
 
-    *使用 docker logs container-name/container-id 命令 可以查看容器日志信息，指定容器名或者 容器 id 即可
+* 使用 docker logs container-name/container-id 命令 可以查看容器日志信息，指定容器名或者 容器 id 即可
 
  
 ### 数据卷管理
