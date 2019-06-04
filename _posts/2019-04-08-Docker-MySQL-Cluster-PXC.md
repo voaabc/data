@@ -373,6 +373,29 @@ PING 172.18.0.201 (172.18.0.201) 56(84) bytes of data.
 64 bytes from 172.18.0.201: icmp_seq=3 ttl=64 time=0.098 ms
 64 bytes from 172.18.0.201: icmp_seq=4 ttl=64 time=0.098 ms
 
+root@e3a9de34f26d:/# apt-get install net-tools
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following NEW packages will be installed:
+  net-tools
+0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+Need to get 248 kB of archives.
+After this operation, 963 kB of additional disk space will be used.
+Get:1 http://deb.debian.org/debian stretch/main amd64 net-tools amd64 1.60+git20161116.90da8a0-1 [248 kB]
+Fetched 248 kB in 6s (37.1 kB/s)                                                                                                                                                                                
+debconf: delaying package configuration, since apt-utils is not installed
+Selecting previously unselected package net-tools.
+(Reading database ... 10555 files and directories currently installed.)
+Preparing to unpack .../net-tools_1.60+git20161116.90da8a0-1_amd64.deb ...
+Unpacking net-tools (1.60+git20161116.90da8a0-1) ...
+Setting up net-tools (1.60+git20161116.90da8a0-1) ...
+root@e3a9de34f26d:/# netstat -ntlp
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:8888            0.0.0.0:*               LISTEN      8/haproxy           
+tcp        0      0 0.0.0.0:3306            0.0.0.0:*               LISTEN      8/haproxy           
+tcp        0      0 127.0.0.11:44688        0.0.0.0:*               LISTEN      -  
 ```
 
 #### Haproxy 2
