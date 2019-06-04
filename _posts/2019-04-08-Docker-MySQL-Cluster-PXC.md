@@ -302,7 +302,7 @@ Query OK, 0 rows affected (0.01 sec)
 * 两个KA之间会进行心跳检测，如果备用服务器没有受到主服务器的心跳响应，说明主服务器发生故障，那么备用服务器就可以争抢虚拟IP，继续工作
 * 我们向虚拟IP发送数据库请求，一个Haproxy挂掉，可以有另一个接替工作
 
-Haproxy双机热备方案
+### Haproxy双机热备方案
 
 ![Haproxy-PXC](http://www.datadatadata.cn/images/mysql/mysql02.png)
 
@@ -311,8 +311,21 @@ Haproxy双机热备方案
 
 
 
-
+#### Docker配置Keepalived
 ```shell
+[root@docker01 ~]# docker exec -it h1 bash
+root@e3a9de34f26d:/# apt-get update
+Get:1 http://security-cdn.debian.org/debian-security stretch/updates InRelease [94.3 kB]              
+Ign:2 http://cdn-fastly.deb.debian.org/debian stretch InRelease                                       
+Get:3 http://cdn-fastly.deb.debian.org/debian stretch-updates InRelease [91.0 kB]
+Get:4 http://cdn-fastly.deb.debian.org/debian stretch Release [118 kB]                      
+Get:5 http://cdn-fastly.deb.debian.org/debian stretch-updates/main amd64 Packages [27.2 kB] 
+Get:6 http://cdn-fastly.deb.debian.org/debian stretch Release.gpg [2434 B]       
+Get:7 http://cdn-fastly.deb.debian.org/debian stretch/main amd64 Packages [7082 kB]                            
+Get:8 http://security-cdn.debian.org/debian-security stretch/updates/main amd64 Packages [492 kB]              
+Fetched 7907 kB in 1min 40s (78.7 kB/s)                                                                        
+Reading package lists... Done
+root@e3a9de34f26d:/# apt-get install keepalived -y
 
 
 ```
@@ -321,13 +334,252 @@ Haproxy双机热备方案
 
 ```shell
 
+state MASTER # Keepalived的身份（MASTER主服务要抢占IP，BACKUP备服务器不会抢占IP） 
+interface eth0 #docker网卡设备，虚拟IP所在 
+virtual_router_id 51 #虚拟路由标识，MASTER和BACKUP的虚拟路由标识必须一致。从0～255 
+priority 100 # MASTER权重要高于BACKUP数字越大优先级越高 
+advert_int 1 # MASTER和BACKUP节点同步检查的时间间隔，单位为秒，主备之间必须一致 
+authentication# 主从服务器验证方式。主备必须使用相同的密码才能正常通信 
+virtual_ipaddress # 虚拟IP。可以设置多个虚拟IP地址，每行一个 
+
+[root@docker01 ~]# vim keepalived.conf
+vrrp_instance VI_1 {
+    state  MASTER
+    interface  eth0
+    virtual_router_id  51
+    priority  100
+    advert_int  1
+    authentication {
+        auth_type  PASS
+        auth_pass  123456
+    }
+     virtual_ipaddress {
+        172.18.0.201
+    }
+}
+
 
 ```
-
 
 ```shell
-
+[root@docker01 ~]# docker cp keepalived.conf h1:/etc/keepalived/
+[root@docker01 ~]# docker exec -it h1 bash
+root@e3a9de34f26d:/# service keepalived start
+[ ok ] Starting keepalived: keepalived.
+root@e3a9de34f26d:/# ping 172.18.0.201
+PING 172.18.0.201 (172.18.0.201) 56(84) bytes of data.
+64 bytes from 172.18.0.201: icmp_seq=1 ttl=64 time=0.094 ms
+64 bytes from 172.18.0.201: icmp_seq=2 ttl=64 time=0.121 ms
+64 bytes from 172.18.0.201: icmp_seq=3 ttl=64 time=0.098 ms
+64 bytes from 172.18.0.201: icmp_seq=4 ttl=64 time=0.098 ms
 
 ```
+
+#### Haproxy 2
+```shell
+[root@docker01 ~]# docker run -it -d -p 4003:8888 -p 4004:3306 -v /home/soft/haproxy:/usr/local/etc/haproxy --name h2 --net=net1 --ip 172.18.0.8 --privileged haproxy
+43d5427e93b99f09ba474ff99685163c1ad64a077c0735624198f08405194c4f
+[root@docker01 ~]# docker exec -it h2 bash
+root@43d5427e93b9:/# haproxy -f /usr/local/etc/haproxy/haproxy.cfg
+root@43d5427e93b9:/# apt-get update
+Ign:2 http://cdn-fastly.deb.debian.org/debian stretch InRelease                                                
+Get:3 http://cdn-fastly.deb.debian.org/debian stretch-updates InRelease [91.0 kB]                              
+Get:1 http://security-cdn.debian.org/debian-security stretch/updates InRelease [94.3 kB]
+Get:4 http://cdn-fastly.deb.debian.org/debian stretch Release [118 kB]               
+Get:5 http://cdn-fastly.deb.debian.org/debian stretch-updates/main amd64 Packages [27.2 kB]
+Get:6 http://cdn-fastly.deb.debian.org/debian stretch Release.gpg [2434 B]       
+Get:7 http://cdn-fastly.deb.debian.org/debian stretch/main amd64 Packages [7082 kB]
+Get:8 http://security-cdn.debian.org/debian-security stretch/updates/main amd64 Packages [492 kB]
+Fetched 7907 kB in 2min 26s (54.1 kB/s)                                                                        
+Reading package lists... Done
+root@43d5427e93b9:/# apt-get install keepalived -y
+
+
+[root@docker01 ~]# cp keepalived.conf keepalived.conf-h2
+[root@docker01 ~]# vim keepalived.conf-h2
+
+vrrp_instance VI_1 {
+    state  BACKUP
+    interface  eth0
+    virtual_router_id  51
+    priority  80
+    advert_int  1
+    authentication {
+        auth_type  PASS
+        auth_pass  123456
+    }
+     virtual_ipaddress {
+        172.18.0.201
+    }
+}
+
+[root@docker01 ~]# docker cp keepalived.conf-h2 h2:/etc/keepalived/keepalived.conf
+
+
+
+root@43d5427e93b9:/# cd /etc/keepalived/
+root@43d5427e93b9:/etc/keepalived# more keepalived.conf 
+vrrp_instance VI_1 {
+    state  BACKUP
+    interface  eth0
+    virtual_router_id  51
+    priority  80
+    advert_int  1
+    authentication {
+        auth_type  PASS
+        auth_pass  123456
+    }
+     virtual_ipaddress {
+        172.18.0.201
+    } 
+}
+root@43d5427e93b9:/etc/keepalived# service keepalived start
+[ ok ] Starting keepalived: keepalived.
+root@43d5427e93b9:/# ping 172.18.0.201
+PING 172.18.0.201 (172.18.0.201) 56(84) bytes of data.
+64 bytes from 172.18.0.201: icmp_seq=1 ttl=64 time=0.268 ms
+64 bytes from 172.18.0.201: icmp_seq=2 ttl=64 time=0.156 ms
+
+```
+
+
+
+
+
+
+
+
+### 实现外网访问虚拟IP
+
+```shell
+[root@docker01 ~]# yum install -y openssl openssl-devel keepalived
+[root@docker01 ~]# vim /etc/keepalived/keepalived.conf
+
+vrrp_instance VI_1 {
+    state MASTER
+    interface ens33
+    virtual_router_id 51
+    priority 100
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    } 
+	virtual_ipaddress {
+        192.168.8.191
+#这里是指定的一个宿主机上的虚拟ip，一定要和宿主机网卡在同一个网段，
+    } 
+} 
+
+#接受监听数据来源的端口，网页入口使用
+virtual_server 192.168.8.191 8888 {
+    delay_loop 3
+    lb_algo rr
+    lb_kind NAT
+    persistence_timeout 50
+    protocol TCP
+#把接受到的数据转发给docker服务的网段及端口，由于是发给docker服务，所以和docker服务数据要一致
+    real_server 172.18.0.201 8888 {
+        weight 1
+    } 
+} 
+
+#接受数据库数据端口，宿主机数据库端口是3306，所以这里也要和宿主机数据接受端口一致
+virtual_server 192.168.8.191 3306 {
+    delay_loop 3
+    lb_algo rr
+    lb_kind NAT
+    persistence_timeout 50
+    protocol TCP
+
+    real_server 172.18.0.201 3306 {
+        weight 1
+    } 
+}
+
+
+[root@docker01 ~]# systemctl start keepalived
+[root@docker01 ~]# yum install net-tools -y
+[root@docker01 ~]# netstat -ntlp
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      9411/sshd           
+tcp        0      0 127.0.0.1:25            0.0.0.0:*               LISTEN      9836/master         
+tcp6       0      0 :::3307                 :::*                    LISTEN      70638/docker-proxy- 
+tcp6       0      0 :::3308                 :::*                    LISTEN      70904/docker-proxy- 
+tcp6       0      0 :::3309                 :::*                    LISTEN      72024/docker-proxy- 
+tcp6       0      0 :::3310                 :::*                    LISTEN      73232/docker-proxy- 
+tcp6       0      0 :::3311                 :::*                    LISTEN      74437/docker-proxy- 
+tcp6       0      0 :::22                   :::*                    LISTEN      9411/sshd           
+tcp6       0      0 ::1:25                  :::*                    LISTEN      9836/master         
+tcp6       0      0 :::4001                 :::*                    LISTEN      77252/docker-proxy- 
+tcp6       0      0 :::4002                 :::*                    LISTEN      77265/docker-proxy- 
+tcp6       0      0 :::4003                 :::*                    LISTEN      80591/docker-proxy- 
+tcp6       0      0 :::4004                 :::*                    LISTEN      80577/docker-proxy-
+
+[root@docker01 ~]# ip addr show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 00:0c:29:84:45:75 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.8.211/24 brd 192.168.8.255 scope global noprefixroute ens33
+       valid_lft forever preferred_lft forever
+    inet 192.168.8.191/32 scope global ens33
+       valid_lft forever preferred_lft forever
+    inet6 fe80::c71:19f9:8df7:f491/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:08:94:f1:03 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 scope global docker0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:8ff:fe94:f103/64 scope link 
+       valid_lft forever preferred_lft forever
+12: br-13dd609ce493: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:b9:89:cb:b0 brd ff:ff:ff:ff:ff:ff
+    inet 172.18.0.1/24 scope global br-13dd609ce493
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:b9ff:fe89:cbb0/64 scope link 
+       valid_lft forever preferred_lft forever
+14: veth5d9969d@if13: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-13dd609ce493 state UP group default 
+    link/ether 26:e0:af:e0:2e:a0 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::24e0:afff:fee0:2ea0/64 scope link 
+       valid_lft forever preferred_lft forever
+16: veth9bad7f6@if15: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-13dd609ce493 state UP group default 
+    link/ether aa:23:c6:af:c8:be brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::a823:c6ff:feaf:c8be/64 scope link 
+       valid_lft forever preferred_lft forever
+18: veth6a73b97@if17: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-13dd609ce493 state UP group default 
+    link/ether ca:f0:23:ef:96:dc brd ff:ff:ff:ff:ff:ff link-netnsid 2
+    inet6 fe80::c8f0:23ff:feef:96dc/64 scope link 
+       valid_lft forever preferred_lft forever
+20: vetha3ca3d6@if19: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-13dd609ce493 state UP group default 
+    link/ether 9a:c5:7d:f9:0b:71 brd ff:ff:ff:ff:ff:ff link-netnsid 3
+    inet6 fe80::98c5:7dff:fef9:b71/64 scope link 
+       valid_lft forever preferred_lft forever
+22: vethc1a1299@if21: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-13dd609ce493 state UP group default 
+    link/ether 4e:ac:2f:fa:11:1e brd ff:ff:ff:ff:ff:ff link-netnsid 4
+    inet6 fe80::4cac:2fff:fefa:111e/64 scope link 
+       valid_lft forever preferred_lft forever
+38: vetha988561@if37: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-13dd609ce493 state UP group default 
+    link/ether 5a:d3:66:6c:a5:6b brd ff:ff:ff:ff:ff:ff link-netnsid 6
+    inet6 fe80::58d3:66ff:fe6c:a56b/64 scope link 
+       valid_lft forever preferred_lft forever
+40: veth5057bf3@if39: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-13dd609ce493 state UP group default 
+    link/ether b6:36:84:f8:a4:31 brd ff:ff:ff:ff:ff:ff link-netnsid 7
+    inet6 fe80::b436:84ff:fef8:a431/64 scope link 
+       valid_lft forever preferred_lft forever
+
+```
+
+
+
+
+
+
+
 
 
