@@ -225,4 +225,31 @@ zabbix_zabbix-web_1            docker-entrypoint.sh          Up      443/tcp, 0.
 
 #rpm -ivh https://repo.zabbix.com/zabbix/4.0/rhel/7/x86_64/zabbix-release-4.0-1.el7.noarch.rpm
 #yum -y install zabbix-agent-4.0.1
+[root@docker02 zabbix]# docker exec -it zabbix_zabbix-server_1  ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+61: eth0@if62: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP 
+    link/ether 02:42:ac:14:00:04 brd ff:ff:ff:ff:ff:ff
+    inet 172.20.0.4/16 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:acff:fe14:4/64 scope link 
+       valid_lft forever preferred_lft forever
+
+
+[root@docker02 zabbix]# vim /etc/zabbix/zabbix_agentd.conf
+Server=172.18.0.4
+UnsafeUserParameters=1
+Include=/etc/zabbix/zabbix_agentd.d/*.conf
+
+
+[root@docker02 zabbix]# systemctl start zabbix-agent.service
+
 ```
+
+
+
+
