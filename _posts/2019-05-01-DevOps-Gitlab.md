@@ -1,8 +1,8 @@
 ---
 layout: post
-title: DevOps之Gitlab部署
-categories: DevOps Gitlab
-tags: DevOps Gitlab
+title: DevOps之GitLab部署
+categories: DevOps GitLab
+tags: DevOps GitLab
 ---
 
 * content
