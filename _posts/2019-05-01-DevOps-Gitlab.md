@@ -84,7 +84,7 @@ A challenge password []:123456
 An optional company name []:
 ```
 
-```SHELL
+```shell
 [root@gitlab ~]# cd /etc/gitlab/ssl/
 #ssl密钥和证书
 [root@gitlab ssl]# ll
