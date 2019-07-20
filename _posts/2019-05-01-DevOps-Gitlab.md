@@ -82,7 +82,9 @@ Please enter the following 'extra' attributes
 to be sent with your certificate request
 A challenge password []:123456
 An optional company name []:
+```
 
+```SHELL
 [root@gitlab ~]# cd /etc/gitlab/ssl/
 #ssl密钥和证书
 [root@gitlab ssl]# ll
@@ -190,7 +192,7 @@ Run
   git config --global user.email "you@example.com"
   git config --global user.name "Your Name"
 
-to set your account's default identity.
+to set your account s default identity.
 Omit --global to set the identity only in this repository.
 
 fatal: unable to auto-detect email address (got 'root@gitlab.(none)')
