@@ -9,7 +9,7 @@ tags: DevOps Ansible
 {:toc}
 
 
-#### 
+### 准备linux初始环境
 
 
 ```shell
@@ -43,9 +43,9 @@ Permissive
 
 ```
 
-#### Ansible2.5+Python3.6安装步骤
+### Ansible2.5+Python3.6安装步骤
 
-### 安装python3.6.5和virtualenv工具
+#### 安装python3.6.5和virtualenv工具
 
 ```shell
 [root@ansible ~]# wget http://www.python.org/ftp/python/3.6.5/Python-3.6.5.tar.xz
@@ -88,7 +88,7 @@ You should consider upgrading via the 'pip install --upgrade pip' command.
 
 
 
-### 创建ansible账户并安装python3.6.5版本virtualenv实例
+#### 创建ansible账户并安装python3.6.5版本virtualenv实例
 
 ```shell
 [root@ansible Python-3.6.5]# cd 
@@ -103,7 +103,7 @@ done.
 
 ```
 
-### Git源码安装ansible2.5
+#### Git源码安装ansible2.5
 
 
 ```shell
@@ -121,7 +121,7 @@ Resolving deltas: 100% (295204/295204), done.
 ```
 
 
-### 加载python3.6.5 virtualenv环境
+#### 加载python3.6.5 virtualenv环境
 ```shell
 [deploy@ansible .py3-a2.5-env]$ source /home/deploy/.py3-a2.5-env/bin/activate
 (.py3-a2.5-env) [deploy@ansible .py3-a2.5-env]$
@@ -145,7 +145,7 @@ drwxrwxr-x.  3 deploy deploy   23 Jul 20 18:49 lib
 
 ```
 
-### 在python3.6.5虚拟环境下加载ansible2.5
+#### 在python3.6.5虚拟环境下加载ansible2.5
 ```shell
 
 (.py3-a2.5-env) [deploy@ansible .py3-a2.5-env]$ cd ansible/
@@ -162,7 +162,7 @@ Switched to a new branch 'stable-2.5'
 
 ```
 
-### 验证ansible版本
+#### 验证ansible版本
 ```shell
 (.py3-a2.5-env) [deploy@ansible ansible]$ ansible --version
 ansible 2.5.15 (stable-2.5 ab16969416) last updated 2019/07/21 15:42:47 (GMT +800)
@@ -178,9 +178,9 @@ logout
 
 
 
-#### 测试验证
+### 测试验证
 
-开始编写playbooks
+#### 开始编写playbooks
 
 ```shell
 [root@ansible ~]# su - deploy
@@ -246,7 +246,7 @@ inventory  roles
 4 directories, 3 files
 ```
 
-### 配置SSH免秘钥认证
+#### 配置SSH免秘钥认证
 ```shell
 [root@ansible ~]# vim /etc/hosts
 192.168.8.223 test.example.com
@@ -293,7 +293,7 @@ Last login: Sun Jul 21 05:18:28 2019 from 192.168.8.163
 [root@testbox ~]# whoami
 root
 ```
-
+#### 验证
 ```shell
 [root@testbox ~]# exit
 logout
