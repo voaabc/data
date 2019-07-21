@@ -32,14 +32,10 @@ SELINUX=disabled
 #     mls - Multi Level Security protection.
 SELINUXTYPE=targeted 
 
-
 [root@ansible ~]# setenforce 0
 [root@ansible ~]# getenforce
 Permissive
 [root@ansible ~]# yum -y install git nss curl wget
-
-
-
 
 ```
 
