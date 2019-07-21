@@ -1,6 +1,6 @@
 ---
 layout: post
-title: DevOps之Ansible 2.5部署
+title: DevOps之Ansible2.5部署
 categories: DevOps Ansible
 tags: DevOps Ansible
 ---
