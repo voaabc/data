@@ -277,7 +277,7 @@ ECDSA key fingerprint is MD5:df:2a:6b:89:0e:4e:8b:58:91:7f:7c:aa:bb:63:6b:ab.
 Are you sure you want to continue connecting (yes/no)? yes
 /bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
 /bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
-root@test.example.com''s password: 
+root@test.example.com's password: 
 
 Number of key(s) added: 1
 
