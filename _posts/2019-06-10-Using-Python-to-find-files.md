@@ -13,7 +13,8 @@ tags: Python Script GUI
 
 
 
-### 功能：返回用户输入的文件的绝对路径
+### 功能
+> 返回用户输入的文件的绝对路径
 
 
 ### 设计思路
@@ -55,7 +56,7 @@ else:
 ### 运行结果展示
 
 无此文件
-```Shell
+```SHELL
 (test01) ubuntu01@ubuntu01:~/test9$ pwd
 /home/ubuntu01/test9
 (test01) ubuntu01@ubuntu01:~/test9$ ll
@@ -72,7 +73,7 @@ yeeeee.txt
 查无此文件
 ```
 有此文件
-```Shell
+```SHELL
 (test01) ubuntu01@ubuntu01:~/test9$ python ex29.py 
 请输入您要查找哪个盘中的文件（如：D:\\）/home/ubuntu01/test9
 请输入您要查找的文件名：
