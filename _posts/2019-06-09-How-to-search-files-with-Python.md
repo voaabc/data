@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 如何用 Python 搜索文件
-categories: Python
+categories: Python 脚本
 tags: Python Script
 ---
 
