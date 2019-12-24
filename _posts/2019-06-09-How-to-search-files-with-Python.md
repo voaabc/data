@@ -9,7 +9,7 @@ tags: Python Script
 {:toc}
 
 
-## 范例1
+## 范例
 
 ```python
 import os
