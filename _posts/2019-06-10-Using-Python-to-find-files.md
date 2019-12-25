@@ -116,7 +116,7 @@ def search(path1,name):
 
     while len(Allfiles) != 0:    #当队列中为空的时候跳出循环
         path =Allfiles.pop(0)    #从队列中弹出首个路径
-        if os.path.isdir(path): #判断路径是否为目录
+        if os.path.isdir(path):  #判断路径是否为目录
             ALLFilePath =os.listdir(path)    #若是目录，遍历将里面所有文件入队
             for line in ALLFilePath:
                 newPath =path +"\\"+line   #形成绝对路径
@@ -135,3 +135,9 @@ if answer == -1:
 else:
     g.msgbox(answer,'返回路径')
 ```
+
+> pop() 函数用于移除列表中的一个元素（默认最后一个元素），并且返回该元素的值。
+
+> append() 方法用于在列表末尾添加新的对象。
+
+
