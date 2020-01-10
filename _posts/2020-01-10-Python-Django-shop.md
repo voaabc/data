@@ -11,7 +11,7 @@ tags: Python Django
 
 ## 项目架构的程序设计
 
-
+### 项目使用技术
 
     基于Python语言，版本：>=3.5及以上。
     使用Django框架，版本：1.11.11的LTS版本。
@@ -20,7 +20,7 @@ tags: Python Django
     图像处理： Pillow=5.0.0
     Web前端技术：HTML、CSS、JavaScript和Jquery等
 
-### 项目使用技术
+
 
 ```
 [root@centostest ~]# cat /etc/redhat-release
