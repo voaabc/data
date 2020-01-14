@@ -23,7 +23,7 @@ tags: Python Django
 
 ### Python&Django虚拟环境
 
-```
+```sh
 [root@centostest ~]# cat /etc/redhat-release
 CentOS Linux release 7.6.1810 (Core)
 [root@centostest ~]# yum install ntpdate wget vim tree -y
