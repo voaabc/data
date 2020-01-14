@@ -56,7 +56,7 @@ else:
 ### 运行结果展示
 
 无此文件
-```
+```sh
 (test01) ubuntu01@ubuntu01:~/test9$ pwd
 /home/ubuntu01/test9
 (test01) ubuntu01@ubuntu01:~/test9$ ll
