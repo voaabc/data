@@ -200,6 +200,14 @@ tcp6       0      0 ::1:25                  :::*                    LISTEN      
 
 ```
 
+
+
+
+
+## 基于Django框架的项目搭建
+
+### 创建数据库 shopdb
+
 ```sql
 (env_1) [root@centostest ~]# more /tmp/shopdb.sql 
 -- 会员信息表（后台管理员信息也在此标准，通过状态区分）
@@ -278,6 +286,11 @@ insert into users values(null,'admin','管理员',md5('admin'),1,'北京市中�
 
 
 ```sh
+(env_1) [root@centostest ~]# docker ps -a
+\CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                               NAMES
+6e3920ff7352        mysql:8.0.16        "docker-entrypoint.s…"   27 minutes ago      Up 27 minutes       0.0.0.0:3306->3306/tcp, 33060/tcp   mysql
+(env_1) [root@centostest ~]# docker cp /tmp/shopdb.sql mysql:/tmp/
+
 (env_1) [root@centostest ~]# docker exec -it mysql bash
 root@6e3920ff7352:/# mysql -u root -p
 Enter password: 
@@ -308,4 +321,206 @@ mysql> show databases;
 +--------------------+
 5 rows in set (0.00 sec)
 
+mysql> USE shopdb;
+Database changed
+mysql> source /tmp/shopdb.sql
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+Query OK, 1 row affected (0.01 sec)
 ```
+
+
+### 创建项目 myobject 框架和应用 myamdin、web和common
+
+
+```sh
+# 创建项目框架 `myobject`
+(env_1) [root@centostest opt]# django-admin startproject myobject
+(env_1) [root@centostest opt]# ll
+total 4
+drwx--x--x.  4 root root   28 Jan 14 04:07 containerd
+drwxr-xr-x.  4 root root   31 Jan 14 04:18 docker-mysql
+drwxr-xr-x.  5 root root   43 Jan 10 02:23 env_1
+drwxr-xr-x.  3 root root   39 Jan 14 05:04 myobject
+drwxr-xr-x.  6 root root   56 Jan 10 02:10 python362
+drwxr-xr-x. 17  501  501 4096 Jan 10 02:09 Python-3.6.2
+(env_1) [root@centostest opt]# cd myobject
+# 在项目中创建一个myadmin应用(项目的后台管理)
+(env_1) [root@centostest myobject]# python manage.py startapp myadmin
+# 在项目中再创建一个web应用(项目前台)
+(env_1) [root@centostest myobject]# python manage.py startapp web
+# 在项目中再创建一个common应用(项目的前台和后台的公告应用)
+(env_1) [root@centostest myobject]# python manage.py startapp common
+# 创建模板目录
+(env_1) [root@centostest myobject]# mkdir templates
+(env_1) [root@centostest myobject]# mkdir templates/myadmin
+(env_1) [root@centostest myobject]# mkdir templates/web
+# 创建静态资源目录
+(env_1) [root@centostest myobject]# mkdir static
+(env_1) [root@centostest myobject]# mkdir static/myadmin
+(env_1) [root@centostest myobject]# mkdir static/web
+# 创建前后台应用模板目录,并在里面各创建一个`__init__.py`和`index.py`的空文件
+(env_1) [root@centostest myobject]# mkdir myadmin/views
+(env_1) [root@centostest myobject]# touch myadmin/views/__init__.py
+(env_1) [root@centostest myobject]# touch myadmin/views/index.py
+(env_1) [root@centostest myobject]# mkdir web/views
+(env_1) [root@centostest myobject]# touch web/views/__init__.py
+(env_1) [root@centostest myobject]# touch web/views/index.py
+# 删除前后台应用的默认模板文件
+(env_1) [root@centostest myobject]# rm -rf myadmin/views.py
+(env_1) [root@centostest myobject]# rm -rf web/views.py
+# 拷贝路由文件到应用目录中
+(env_1) [root@centostest myobject]# cp myobject/urls.py   myadmin/urls.py
+(env_1) [root@centostest myobject]# cp myobject/urls.py   web/urls.py
+(env_1) [root@centostest myobject]# cd ..
+(env_1) [root@centostest opt]# tree myobject
+myobject
+├── common
+│   ├── admin.py
+│   ├── apps.py
+│   ├── __init__.py
+│   ├── migrations
+│   │   └── __init__.py
+│   ├── models.py
+│   ├── tests.py
+│   └── views.py
+├── manage.py
+├── myadmin
+│   ├── admin.py
+│   ├── apps.py
+│   ├── __init__.py
+│   ├── migrations
+│   │   └── __init__.py
+│   ├── models.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views
+│       ├── index.py
+│       └── __init__.py
+├── myobject
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-36.pyc
+│   │   └── settings.cpython-36.pyc
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── static
+│   ├── myadmin
+│   └── web
+├── templates
+│   ├── myadmin
+│   └── web
+└── web
+    ├── admin.py
+    ├── apps.py
+    ├── __init__.py
+    ├── migrations
+    │   └── __init__.py
+    ├── models.py
+    ├── tests.py
+    ├── urls.py
+    └── views
+        ├── index.py
+        └── __init__.py
+
+16 directories, 32 files
+
+```
+
+### 项目框架配置
+
+```python
+#编辑myobject/myobject/__init__.py文件，添加Pymysql的数据库操作支持
+
+import pymysql
+pymysql.install_as_MySQLdb()
+
+
+
+#编辑myobject/myobject/settings.py文件
+# 1. 配置允许访问的主机名信息
+ALLOWED_HOSTS = ['*']
+或
+ALLOWED_HOSTS = ['localhost','127.0.0.1','192.168.2.240']
+
+...
+
+# 2. 将myadmin和web的应用添加到项目框架结构中
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'myadmin',
+    'web',
+    'common',
+]
+
+...
+
+# 3. 配置模板目录 os.path.join(BASE_DIR,'templates')
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+...
+
+# 4. 配置项目的数据库连接信息：
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'shopdb',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
+
+...
+
+# 5. 设置时区和语言 
+LANGUAGE_CODE = 'zh-hans'
+
+TIME_ZONE = 'Asia/Shanghai'
+
+...
+
+# 6. 配置网站的静态资源目录
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+
+
+
+
+
+
+
+
+
