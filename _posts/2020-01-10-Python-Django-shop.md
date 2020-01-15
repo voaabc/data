@@ -198,6 +198,9 @@ tcp6       0      0 ::1:25                  :::*                    LISTEN      
 
 参考：https://www.jianshu.com/p/d6febf6f95e0
 
+
+systemctl stop firewalld
+systemctl disable firewalld
 ```
 
 
@@ -210,6 +213,10 @@ tcp6       0      0 ::1:25                  :::*                    LISTEN      
 
 ```sql
 (env_1) [root@centostest ~]# more /tmp/shopdb.sql 
+
+-- 设置UTF8
+set character set utf8;
+
 -- 会员信息表（后台管理员信息也在此标准，通过状态区分）
 CREATE TABLE `users`(
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -335,6 +342,62 @@ Query OK, 0 rows affected, 1 warning (0.00 sec)
 Query OK, 0 rows affected, 1 warning (0.01 sec)
 
 Query OK, 1 row affected (0.01 sec)
+
+
+
+mysql> use mysql;
+Database changed
+mysql> select user, host, plugin from user where user='root';
++------+-----------+-----------------------+
+| user | host      | plugin                |
++------+-----------+-----------------------+
+| root | %         | caching_sha2_password |
+| root | localhost | caching_sha2_password |
++------+-----------+-----------------------+
+2 rows in set (0.00 sec)
+
+mysql> CREATE USER 'shop'@'%' IDENTIFIED WITH mysql_native_password BY '123456a!';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select user, host, plugin from user where user='shop';
++------+------+-----------------------+
+| user | host | plugin                |
++------+------+-----------------------+
+| shop | %    | mysql_native_password |
++------+------+-----------------------+
+1 row in set (0.00 sec)
+
+
+mysql> grant all privileges on shopdb.* to 'shop'@'%' with grant option;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> flush privileges; 
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> show grants for shop;
++--------------------------------------------------------------------+
+| Grants for shop@%                                                  |
++--------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `shop`@`%`                                   |
+| GRANT ALL PRIVILEGES ON `shopdb`.* TO `shop`@`%` WITH GRANT OPTION |
++--------------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+mysql> show variables like 'character%';
++--------------------------+--------------------------------+
+| Variable_name            | Value                          |
++--------------------------+--------------------------------+
+| character_set_client     | utf8                           |
+| character_set_connection | utf8mb4                        |
+| character_set_database   | utf8mb4                        |
+| character_set_filesystem | binary                         |
+| character_set_results    | utf8                           |
+| character_set_server     | utf8mb4                        |
+| character_set_system     | utf8                           |
+| character_sets_dir       | /usr/share/mysql-8.0/charsets/ |
++--------------------------+--------------------------------+
+8 rows in set (0.01 sec)
+
 ```
 
 
@@ -493,9 +556,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'shopdb',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
+        'USER': 'shop',
+        'PASSWORD': '123456a!',
+        'HOST': '192.168.220.131',
         'PORT': '3306',
     }
 }
@@ -519,8 +582,123 @@ STATICFILES_DIRS = [
 
 ```
 
+### 项目urls路由信息配置
+
+```python
+
+
+# 打开根路由文件：myobject/myobject/urls.py路由文件，编写路由配置信息
+
+# myobject/myobject/urls.py
+
+from django.conf.urls import url,include
+#from django.contrib import admin
+
+urlpatterns = [
+#   url(r'^admin/', admin.site.urls),
+    url(r'^myadmin/', include('myadmin.urls')), #网站后台路由
+    url(r'^', include('web.urls')),           #网站前台路由
+]
+
+# 打开项目后台管理路由文件：myobject/myadmin/urls.py路由文件，编写路由配置信息
+
+# myobject/myadmin/urls.py
+
+from django.conf.urls import url
+
+from myadmin.views import index
+
+urlpatterns = [
+    # 后台首页
+    url(r'^$', index.index, name="myadmin_index"),
+
+]
+
+# 打开项目前台路由文件：myobject/web/urls.py路由文件，编写路由配置信息
+
+# myobject/web/urls.py
+
+from django.conf.urls import url
+
+from web.views import index
+
+urlpatterns = [
+    url(r'^$', index.index, name="index"),
+]
 
 
 
+
+
+```
+
+
+
+
+
+### 编写后台视图测试
+
+```python
+
+#编辑后台视图文件
+
+# myobject/myadmin/views/index.py
+from django.shortcuts import render
+from django.http import HttpResponse
+
+#后台首页
+def index(request):
+    return HttpResponse('欢迎进入商城网站后台！')
+
+# myobject/web/views/index.py
+from django.shortcuts import render
+from django.http import HttpResponse
+
+#前台首页
+def index(request):
+    return HttpResponse('欢迎进入商城网站前台首页！')
+
+    5.2 运行测试
+
+    在项目根目录下启动服务，并使用浏览器访问测试：http://localhost:8000/myadmin
+
+[root@localhost myobject]# pwd
+/python/myobject
+[root@localhost myobject]# ls
+manage.py  myadmin  myobject  web  static  templates
+[root@localhost myobject]# python3 manage.py runserver 0:8000
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+April 06, 2018 - 14:29:36
+Django version 1.11, using settings 'myobject.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+^C[root@localhost myobject]#
+
+
+
+
+
+
+
+```
+
+
+
+
+
+
+
+```python
+
+
+
+
+
+
+
+```
 
 
