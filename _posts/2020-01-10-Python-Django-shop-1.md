@@ -683,7 +683,7 @@ drwxr-xr-x. 5 root root 154 Jan 14 22:24 web
 
 ### 摆放后台首页面
 
-```js
+```cs
  使用事先准备好的后台模板：
 
     从github上下载一个后台简洁模板：https://github.com/alecfan/mstp_17_akira
