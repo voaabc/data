@@ -49,7 +49,10 @@ tags: Python Django
             <div class="navbar">
                 <div class="navbar-inner">
                     <div class="container">
-                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a> <a class="brand" href="#">网站后台管理</a>
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                         <span class="icon-bar"></span> <span class="icon-bar"></span> 
+                         <span class="icon-bar"></span> </a> 
+                         <a class="brand" href="#">网站后台管理</a>
                         <div class="nav-collapse">
                             <ul class="nav">
                                 <li class="active">
@@ -62,7 +65,8 @@ tags: Python Django
                                     <a href="help.htm">帮助</a>
                                 </li>
                                 <li class="dropdown">
-                                    <a href="help.htm" class="dropdown-toggle" data-toggle="dropdown">更多 <b class="caret"></b></a>
+                                    <a href="help.htm" class="dropdown-toggle" data-toggle="dropdown">更多 
+                                    <b class="caret"></b></a>
                                     <ul class="dropdown-menu">
                                         <li>
                                             <a href="help.htm">Introduction Tour</a>
@@ -192,7 +196,8 @@ tags: Python Django
             To get the most out of Akira start with our 3 minute tour.
         </p>
         <p>
-            <a href="help.htm" class="btn btn-primary btn-large">Start Tour</a> <a class="btn btn-large">No Thanks</a>
+            <a href="help.htm" class="btn btn-primary btn-large">Start Tour</a> 
+            <a class="btn btn-large">No Thanks</a>
         </p>
     </div>
     <div class="well summary">
