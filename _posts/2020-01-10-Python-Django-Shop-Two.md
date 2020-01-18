@@ -15,6 +15,7 @@ tags: Python Django
 
 ### 摆放后台首页面
 
+```
 ```py
  使用事先准备好的后台模板：
 
@@ -233,5 +234,5 @@ tags: Python Django
 
 
 ```
-
+```
 
