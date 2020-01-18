@@ -15,7 +15,7 @@ tags: Python Django
 
 ### 摆放后台首页面
 
-```cs
+```py
  使用事先准备好的后台模板：
 
     从github上下载一个后台简洁模板：https://github.com/alecfan/mstp_17_akira
