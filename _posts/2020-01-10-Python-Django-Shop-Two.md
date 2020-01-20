@@ -30,7 +30,9 @@ tags: Python Django
       '''管理后台首页'''
       return render(request,"myadmin/index.html")
 
-编辑父类模板：[/templates/myadmin/base.html](view-source:https://www.datadatadata.cn/files/001/myadmin/index.html)
+```
+
+> 编辑父类模板：[/templates/myadmin/base.html](view-source:https://www.datadatadata.cn/files/001/myadmin/index.html)
 
 编辑后台首页模板：/templates/myadmin/index.html
 
@@ -38,5 +40,5 @@ tags: Python Django
 
 
 
-```
+
 
