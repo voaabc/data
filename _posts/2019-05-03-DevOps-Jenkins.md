@@ -35,6 +35,8 @@ jenkins.noarch                              2.176.2-1.1                jenkins
 ```
 
 ### 安装Jenkins
+
+```shell
 [root@jenkins ~]# yum install -y jenkins
 # 创建Jenkins系统服务用户
 [root@jenkins ~]# useradd deploy
@@ -60,20 +62,8 @@ java.io.FileNotFoundException: /var/cache/jenkins/war/META-INF/MANIFEST.MF (Perm
 COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
 java    27455 deploy  164u  IPv6  76989      0t0  TCP *:webcache (LISTEN)
 
-
-```shell
-
-
 ```
 
 
-```shell
 
 
-```
-
-
-```shell
-
-
-```
