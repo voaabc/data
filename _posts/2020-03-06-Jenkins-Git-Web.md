@@ -93,7 +93,7 @@ After doing this, you may fix the identity used for this commit with:
 # On branch master
 nothing to commit, working directory clean
 [root@localhost app]# git push origin master
-git@192.168.8.62's password: 
+git@192.168.8.62 s password: 
 Counting objects: 3, done.
 Writing objects: 100% (3/3), 208 bytes | 0 bytes/s, done.
 Total 3 (delta 0), reused 0 (delta 0)
@@ -187,8 +187,8 @@ total 4
 ### 006-Jenkins
 
 ```sh
-
-
+[root@localhost ~]# sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+[root@localhost ~]# sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
 
 ```
 
