@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 用 Python 实现文件查找（BIF实现及队列实现）
+title: 用 Python 实现文件查找
 categories: Python 脚本 图形界面
 tags: Python Script GUI
 ---

@@ -189,7 +189,55 @@ total 4
 ```sh
 [root@localhost ~]# sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
 [root@localhost ~]# sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+[root@localhost ~]# yum install jenkins -y
+[root@localhost ~]# rpm -ql jenkins
+/etc/init.d/jenkins
+/etc/logrotate.d/jenkins
+/etc/sysconfig/jenkins
+/usr/lib/jenkins
+/usr/lib/jenkins/jenkins.war
+/usr/sbin/rcjenkins
+/var/cache/jenkins
+/var/lib/jenkins
+/var/log/jenkins
+[root@localhost ~]# yum install java -y
+[root@localhost ~]# java -version
+openjdk version "1.8.0_242"
+OpenJDK Runtime Environment (build 1.8.0_242-b08)
+OpenJDK 64-Bit Server VM (build 25.242-b08, mixed mode)
+[root@localhost ~]# systemctl start jenkins
+[root@localhost ~]# ps -ef | grep jenkins
+jenkins   17313      1 77 08:17 ?        00:00:10 /etc/alternatives/java -Dcom.sun.akuma.Daemon=daemonized 
+-Djava.awt.headless=true -DJENKINS_HOME=/var/lib/jenkins -jar /usr/lib/jenkins/jenkins.war 
+--logfile=/var/log/jenkins/jenkins.log --webroot=/var/cache/jenkins/war --daemon --httpPort=8080 
+--debug=5 --handlerCountMax=100 --handlerCountMaxIdle=20
+root      17363  16947  0 08:17 pts/0    00:00:00 grep --color=auto jenkins
+[root@localhost ~]# yum install net-tools -y
+[root@localhost ~]# netstat -ntlp | grep 8080
+tcp6       0      0 :::8080                 :::*                    LISTEN      17313/java
 
+http://192.168.8.61:8080/
+
+[root@localhost ~]# cd /var/lib/jenkins/updates/
+
+[root@localhost updates]# sed -i 's/http:\/\/updates.jenkins-ci.org\/download/https:\/\/mirrors.tuna.tsinghua.edu.cn\/jenkins/g' default.json && sed -i 's/http:\/\/www.google.com/https:\/\/www.baidu.com/g' default.json
+
+[root@localhost ~]# vim /var/lib/jenkins/hudson.model.UpdateCenter.xml
+<?xml version='1.1' encoding='UTF-8'?>
+<sites>
+  <site>
+    <id>default</id>
+    <url>https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json</url>
+  </site>
+</sites>
+~        
+
+[root@localhost ~]# systemctl stop jenkins
+[root@localhost ~]# systemctl start jenkins
+
+[root@localhost ~]# more /var/lib/jenkins/secrets/initialAdminPassword
+009a7fdc898f4362a61f38c7b3000dcb
+[root@localhost ~]# tail -f /var/log/jenkins/jenkins.log
 ```
 
 
