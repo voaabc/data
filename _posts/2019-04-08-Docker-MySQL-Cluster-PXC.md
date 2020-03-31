@@ -121,11 +121,11 @@ $ docker run -d -p 3311:3306 -e MYSQL_ROOT_PASSWORD=abc123456 -e CLUSTER_NAME=PX
 * 所有请求发送给单一节点，其负载过高，性能很低，而其他节点却很空闲。
 * 用Haproxy做负载均衡，可以将请求均匀地发送给每个节点，单节点负载低，性能好
 
-![Haproxy-PXC](http://www.datadatadata.cn/images/mysql/mysql01.png)
+![Haproxy-PXC](http://www.aiops.work/images/mysql/mysql01.png)
 
 ### 负载均衡中间件对比
 
-![Haproxy-PXC](http://www.datadatadata.cn/images/mysql/mysql03.png)
+![Haproxy-PXC](http://www.aiops.work/images/mysql/mysql03.png)
 
 ### Haproxy安装
 
@@ -284,7 +284,7 @@ Query OK, 0 rows affected (0.01 sec)
 * 用户名、密码在配置文件中：stats auth admin:admin123456
 * Haproxy不存储数据，只转发数据。可以在数据库中建立Haproxy的连接，端口4002，用户名和密码为数据库集群的用户名和密码
 
-![Haproxy-PXC](http://www.datadatadata.cn/images/mysql/mysql04.png)
+![Haproxy-PXC](http://www.aiops.work/images/mysql/mysql04.png)
 
 ### Haproxy冗余设计
 
@@ -294,7 +294,7 @@ Query OK, 0 rows affected (0.01 sec)
 
 > linux系统可以在一个网卡中定义多个IP地址，把这些地址分配给多个应用程序，这些地址就是虚拟IP，Haproxy的双机热备方案最关键的技术就是虚拟IP。
 
-![Haproxy-PXC](http://www.datadatadata.cn/images/mysql/mysql05.png)
+![Haproxy-PXC](http://www.aiops.work/images/mysql/mysql05.png)
 
 * 定义虚拟IP
 * 在Docker中启动两个Haproxy容器，每个容器中还需要安装Keepalived程序（以下简称KA）
@@ -304,7 +304,7 @@ Query OK, 0 rows affected (0.01 sec)
 
 ### Haproxy双机热备方案
 
-![Haproxy-PXC](http://www.datadatadata.cn/images/mysql/mysql02.png)
+![Haproxy-PXC](http://www.aiops.work/images/mysql/mysql02.png)
 
 * Docker中创建两个Haproxy，并通过Keepalived抢占Docker内地虚拟IP
 * Docker内的虚拟IP不能被外网，所以需要借助宿主机Keepalived映射成外网可以访问地虚拟IP
