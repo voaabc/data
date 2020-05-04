@@ -12,7 +12,7 @@ tags: Python Django
 
 
 
-### Python3.6安装
+### Python 3.6安装
 
 ```sh
 [root@centostest ~]# cat /etc/redhat-release
