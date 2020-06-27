@@ -1,8 +1,8 @@
 ---
 layout: post
-title: What is a container?
-categories: container
-tags: container
+title: What is a Container?
+categories: Container
+tags: Container
 ---
 
 * content
