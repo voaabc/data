@@ -139,7 +139,7 @@ However, the net namespace for both processes points to the same location.
           
         
 
-# Chroot
+## Chroot
 
 An important part of a container process is the ability to have 
 different files that are independent of the host. This is how we can 
@@ -153,7 +153,7 @@ in the root.
           
         
 
-# Cgroups (Control Groups)
+## Cgroups (Control Groups)
 
 CGroups limit the amount of resources a process can consume. These 
 cgroups are values defined in particular files within the /proc 
@@ -167,7 +167,7 @@ These are mapped to other cgroup directories on disk at:
 
 `ls /sys/fs/cgroup/`
 
-# What are the CPU stats for a process?
+## What are the CPU stats for a process?
 
 The CPU stats and usage is stored within a file too!
 
@@ -187,7 +187,7 @@ Each of the directory is grouped based on the container ID assigned by Docker.
 WEBID=$(docker ps --no-trunc | grep 'nginx' | awk '{print $1}')
 ls /sys/fs/cgroup/memory/docker/$DBID`
 
-# How to configure cgroups?
+## How to configure cgroups?
 
 One of the properties of Docker is the ability to control memory limits. This is done via a cgroup setting.
 
@@ -212,7 +212,7 @@ When checking Docker Stats again, the memory limit of the process is now 7.629M
           
         
 
-# Seccomp / AppArmor
+## Seccomp / AppArmor
 
 All actions with Linux is done via syscalls. The kernel has 330 
 system calls that perform operations such as read files, close handles 
