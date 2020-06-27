@@ -43,9 +43,11 @@ The configuration for each process is defined within the `/proc` directory. If y
 
 The command below will list all the contents of /proc, and store the Redis PID for future use.
 
-`DBPID=$(pgrep redis-server)
-echo Redis is $DBPID
-ls /proc`
+`DBPID=$(pgrep redis-server)`
+
+`echo Redis is $DBPID`
+
+`ls /proc`
 
 Each process has it's own configuration and security settings defined within different files.
 `ls /proc/$DBPID`
@@ -183,9 +185,11 @@ All the Docker cgroups for the container's memory configuration are stored withi
 
 Each of the directory is grouped based on the container ID assigned by Docker.
 
-`DBID=$(docker ps --no-trunc | grep 'db' | awk '{print $1}')
-WEBID=$(docker ps --no-trunc | grep 'nginx' | awk '{print $1}')
-ls /sys/fs/cgroup/memory/docker/$DBID`
+`DBID=$(docker ps --no-trunc | grep 'db' | awk '{print $1}')`
+
+`WEBID=$(docker ps --no-trunc | grep 'nginx' | awk '{print $1}')`
+
+`ls /sys/fs/cgroup/memory/docker/$DBID`
 
 ## How to configure cgroups?
 
