@@ -10,7 +10,6 @@ tags: Container Image
 
 
 
-> A look under the the covers at what is a Linux Container Image? 
 
 ## Container Image
 
