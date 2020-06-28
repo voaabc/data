@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Deploy Static HTML Website as Container 
+title: Docker Foundations 02 Deploy Static HTML Website as Container 
 categories: Docker
 tags: Docker
 ---
