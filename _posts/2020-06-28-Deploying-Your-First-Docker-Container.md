@@ -1,8 +1,8 @@
 ---
 layout: post
-title: What is a Container Image?
-categories: Container
-tags: Container Image
+title: Deploying Your First Docker Container
+categories: Docker
+tags: Docker
 ---
 
 * content
