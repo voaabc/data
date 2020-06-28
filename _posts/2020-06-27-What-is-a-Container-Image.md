@@ -1,8 +1,8 @@
 ---
 layout: post
 title: What is a Container Image?
-categories: Container
-tags: Container Image
+categories: Docker
+tags: Docker Image
 ---
 
 * content

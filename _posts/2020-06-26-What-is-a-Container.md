@@ -1,8 +1,8 @@
 ---
 layout: post
 title: What is a Container?
-categories: Container
-tags: Container
+categories: Docker
+tags: Docker
 ---
 
 * content
