@@ -10,10 +10,6 @@ tags: Docker
 
 
 
-
-
-
-
 #### Step 1 - Base Images
 
 All Docker images start from a base image. A base image is the 
@@ -27,7 +23,7 @@ require NGINX to be configured and running on the system before we can
 deploy our static HTML files. As such we want to use NGINX as our base 
 image.
 
-Dockerfile's are simple text files with a command on each line. To define a base image we use the instruction *FROM <image-name>:<tag>*
+Dockerfile's are simple text files with a command on each line. To define a base image we use the instruction `FROM <image-name>:<tag>`
 
 #### Task: Creating a Dockerfile
 
