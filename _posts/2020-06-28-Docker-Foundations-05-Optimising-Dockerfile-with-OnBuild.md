@@ -9,6 +9,7 @@ tags: Docker
 {:toc}
 
 
+### Optimising Dockerfile with OnBuild
 In this scenario, we'll look at how you can optimise Dockerfile using the OnBuild instruction.
 
 The environment has been configured with an example Node.js application however the approaches can be applied to any image. The machine name Docker is running on is called docker. If you want to access any of the services, then use docker instead of localhost or 0.0.0.0.
@@ -41,7 +42,7 @@ We'll see how this base image looks in the next step.
 
 
 
-#### Step 2 - Application Dockerfile
+### Step 2 - Application Dockerfile
 
 With all of the logic to copy the code, install our 
 dependencies and launch our application the only aspect which needs to 
@@ -56,7 +57,7 @@ without having to re-run the same steps improving build times.
 This will be created in the environment for you. The steps to build and launch the Dockerfile are covered in the next step.
 
 
-#### Step 3 - Building & Launching Container
+### Step 3 - Building & Launching Container
 
 The Dockerfile from the previous step has been created for you.
  Building the images based on the OnBuild docker file is the same as 
