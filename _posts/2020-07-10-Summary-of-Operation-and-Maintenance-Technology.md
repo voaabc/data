@@ -10,7 +10,7 @@ tags: 运维
 
 ## 网络
 #### SSLVPN
-#### SORCKS
+#### SOCKS5
 #### CDN
 #### HTTPS
 
