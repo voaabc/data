@@ -1,8 +1,8 @@
 ---
 layout: post
 title: IT技术总结(一)
-categories: 运维
-tags: 运维
+categories: IT
+tags: IT
 ---
 
 * content
