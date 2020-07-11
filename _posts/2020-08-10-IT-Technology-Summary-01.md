@@ -44,11 +44,19 @@ OpenVPN服务器搭建与客户端使用
 #### Jenkins
 
 ## 高可用负载均衡
-#### LVS负载均衡
-#### Nginx负载均衡
+#### LVS
+#### Nginx
+[Nginx实现反向代理负载均衡与静态缓存](http://www.aiops.work/2020/06/18/Nginx-Reverse-Proxy-Load-Balance-Cache/)
+
+[Nginx+Keepalived实现双机热备的高可用](http://www.aiops.work/2020/06/19/Nginx-Keepalived-Active-Standby-high-availability/)
+
+
 
 ## 数据库
 #### MySQL
+
+[Docker搭建MySQL集群(PXC)](http://www.aiops.work/2020/07/08/Docker-MySQL-Cluster-PXC/)
+
 #### Redis
 
 
