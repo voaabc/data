@@ -23,7 +23,9 @@ Google Cloud：台湾 g1-small（1 个 vCPU，1.7 GB 内存）centos-7
 Android: igniter
 
 >实测效果
+![Scientific Internet](https://www.aiops.work/images/Scientific/001.jpg)
 
+![Scientific Internet](https://www.aiops.work/images/Scientific/002.jpg)
 
 
 
@@ -32,11 +34,8 @@ Android: igniter
 #### SSLVPN
 OpenVPN服务器搭建与客户端使用
 
-![Scientific Internet](https://www.aiops.work/images/Scientific/001.jpg)
 
-![Scientific Internet](https://www.aiops.work/images/Scientific/002.jpg)
 
-![Scientific Internet](https://www.aiops.work/images/Scientific/003.jpg)
 
 
 
