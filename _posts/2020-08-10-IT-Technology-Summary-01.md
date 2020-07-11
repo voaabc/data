@@ -11,19 +11,34 @@ tags: IT
 > 近期将陆续更新
 
 ## 网络
+#### Scientific Internet
+
+#### trojan
+>trojan是较新的代理软件，其将通信流量伪装成互联网上最常见的https流量，从而能有效防止流量被检测和干扰。与v2ray相比，trojan功能更专注、从而更加轻量级，性能更好。
+
+安装：略（科学使用）
+
+Google Cloud：台湾 g1-small（1 个 vCPU，1.7 GB 内存）centos-7
+
+Android: igniter
+
+>实测效果
+
+
+
+
+
+
 #### SSLVPN
 OpenVPN服务器搭建与客户端使用
 
-#### SOCKS5
-Linux下搭建SOCKS 5代理
 
-V2Ray
 
-Shadowsocks
 
-#### IPsec VPN
-#### CDN
-#### HTTPS
+
+
+
+
 
 ## CI/CD
 #### GitLab
