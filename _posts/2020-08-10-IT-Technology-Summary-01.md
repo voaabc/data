@@ -24,7 +24,6 @@ Android: igniter
 
 >实测效果
 ![Scientific Internet](https://www.aiops.work/images/Scientific/001.jpg)
-
 ![Scientific Internet](https://www.aiops.work/images/Scientific/002.jpg)
 
 
