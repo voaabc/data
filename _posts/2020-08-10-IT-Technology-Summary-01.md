@@ -37,9 +37,9 @@ Android: igniter
 
 部署：略（请科学回国）
 
-服务端华为云：上海 2vCPUs | 4GB | kc1.large.2 CentOS 7.6 64bit 
+服务端华为云：上海 2vCPUs 4GB kc1.large.2 CentOS 7.6 64bit 
 
-客户端微软云：美国 windows 10
+客户端微软云：美国 Windows 10
 
 >实测
 ![Scientific Internet](https://www.aiops.work/images/Scientific/004.jpg)
