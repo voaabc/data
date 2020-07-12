@@ -11,7 +11,7 @@ tags: IT
 > 近期将陆续更新
 
 ## 网络
-#### Scientific Internet
+### Scientific Internet
 
 #### trojan
 >trojan是较新的代理软件，其将通信流量伪装成互联网上最常见的https流量，从而能有效防止流量被检测和干扰。与v2ray相比，trojan功能更专注、从而更加轻量级，性能更好。
